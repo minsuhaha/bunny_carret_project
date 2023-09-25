@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-PASSWORD_FILE = os.path.join(BASE_DIR, 'password.json')
+PASSWORD_FILE = os.path.join(BASE_DIR, 'secret.json')
 secrets = json.load(open(PASSWORD_FILE))
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -80,8 +80,8 @@ DATABASES = {
         'NAME': secrets["postgresql_name"], # 데이터베이스 이름
         'USER': secrets["postgresql_user"],
         'PASSWORD': secrets["postgresql_pwd"],
-        'HOST': secrets["posgresql_host"],
-        'PORT': secrets["posgresql_port"],
+        'HOST': secrets["postgresql_host"],
+        'PORT': secrets["postgresql_port"],
     }
 }
 
