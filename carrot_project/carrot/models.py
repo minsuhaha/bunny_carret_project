@@ -33,7 +33,7 @@ class Categroy(models.Model):
 
 class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_seller') # 판매자
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_buyer') # 구매자
+    buyer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='product_buyer', null=True) # 구매자
     category = models.ForeignKey(Categroy, on_delete=models.CASCADE, related_name='product_category') # 카테고리명
     region = models.CharField(max_length=100, null=True) # 지역
     price = models.IntegerField() # 가격
