@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
     #어플리케이션 연결
-    # path('',include('carrot.urls'))
+    path('',include('carrot.urls'))
 ]
