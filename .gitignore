@@ -178,3 +178,9 @@ myvenv
 
 # secret key
 secret.json
+
+css
+img
+post_images
+footer.html
+nav.html
