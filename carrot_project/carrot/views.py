@@ -40,3 +40,9 @@ def register(request):
 def trade(request):
     top_posts = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
     return render(request, 'carret_app/trade.html', {'posts': top_posts})
+from .models import Product
+
+# Create your views here.
+def main(request):
+  top_views_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:4]
+  return render(request, 'carret_app/main.html', {'products' : top_views_products})
