@@ -15,7 +15,7 @@
   <body>
     {% include 'carrot_app/nav.html' %}
     <div class="content-box">
-      <a href="#">
+      <a href="{% url 'write' %}">
         <div class="floating-button">
           거래글쓰기
         </div>
@@ -39,7 +39,7 @@
     <div class="container column center">
       <div class="full-box trade-box column">
         <div class="flex-box full-box card-container between">
-          {% for post in posts %}
+          {% for post in products %}
 
             <div class="card-box">
               <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
