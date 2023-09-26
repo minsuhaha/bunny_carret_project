@@ -19,7 +19,7 @@
         {% block content %}
           <div class="about-trade">
             <div class="container">
-              <form class="write-box" method="product" action="{% if product %}{% url 'edit' product.id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data">
+              <form class="write-box" method="POST" action="{% if product %}{% url 'edit' product.id %}{% else %}{% url 'create_form' %}{% endif %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex-box">
                   <label class="img-upload">
@@ -36,9 +36,9 @@
                   </div>
                 </div>
                 <div class="full-box">
-                  <label for="description" class="block-box">물품 설명</label>
-                  <textarea name="description" required="required">
-                    {% if product %}{{ product.description }}
+                  <label for="content" class="block-box">물품 설명</label>
+                  <textarea name="content" required="required">
+                    {% if product %}{{ product.content }}
                     {% endif %}
                   </textarea>
 

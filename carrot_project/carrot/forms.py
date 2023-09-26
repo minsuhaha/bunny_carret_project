@@ -1,4 +1,5 @@
 from django import forms
+from .models import Product
 
 # 유저 회원 가입 폼
 class CustomRegistrationForm(forms.Form):
@@ -30,3 +31,9 @@ class CustomLoginForm(forms.Form):
         label='비밀번호',
         label_suffix='', 
     )
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['title', 'price', 'content', 'region', 'images']

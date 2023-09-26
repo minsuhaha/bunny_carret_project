@@ -1,11 +1,11 @@
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product, UserProfile, UserProfile
+from .models import Product, UserProfile, UserProfile, Categroy
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomLoginForm, CustomRegistrationForm
+from .forms import CustomLoginForm, CustomRegistrationForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -126,7 +126,7 @@ def write(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user)
         
-        if user_profile.region_certification == 'Y':
+        if user_profile.region_certification == 'N':
             return render(request, 'carrot_app/write.html')
         else:
             return redirect('alert', alert_message='동네인증이 필요합니다.')
@@ -150,6 +150,22 @@ def edit(request, id):
         return redirect('trade_product', pk=id)
 
     return render(request, 'carrot_app/write.html', {'product': product})
+
+# 포스트 업로드
+@login_required
+def create_post(request):
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)  # 임시 저장
+            post.seller = request.user  # 작성자 정보 추가 (이 부분을 수정했습니다)
+            post.save()  # 최종 저장
+            return redirect('trade_post', pk=post.pk)  # 저장 후 상세 페이지로 이동
+    else:
+        form = PostForm()
+    return render(request, 'carrot_app/trade_post.html', {'form': form})
+
 
 #location Part
 @login_required
