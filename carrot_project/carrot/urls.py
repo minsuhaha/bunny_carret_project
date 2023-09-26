@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from .views import set_region_certification
 
 urlpatterns = [
     path('register/', views.register, name='register'),  # 회원가입 url
@@ -13,4 +14,9 @@ urlpatterns = [
     path('search/', views.search, name='search'), # 검색 url
     path('write/', views.write, name='write'), #write url
     path('alert/<str:alert_message>/', views.alert, name='alert'),
+
+    # location
+    path('location/', views.location, name='location'),
+    path('set_region/', views.set_region, name='set_region'),
+    path('set_region_certification/', set_region_certification, name='set_region_certification'),
 ]

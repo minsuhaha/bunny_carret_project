@@ -1,9 +1,12 @@
-from .models import Product, UserProfile
+from django.http import JsonResponse
+from django.contrib import messages
+from .models import Product, UserProfile, UserProfile
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomLoginForm, CustomRegistrationForm
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 # 메인 화면
@@ -103,6 +106,8 @@ def alert(request, alert_message):
     return render(request, 'carrot_app/alert.html', {'alert_message': alert_message})
 
 
+
+
 # 상품 검색
 def search(request):
     query = request.GET.get('search')
@@ -112,7 +117,7 @@ def search(request):
                                          Q(seller__username__icontains=query))
     else:
         results = Product.objects.all()
-    
+
     return render(request, 'carrot_app/search.html', {'posts': results})
 
 #거래 글쓰기
@@ -146,3 +151,40 @@ def edit(request, id):
 
     return render(request, 'carrot_app/write.html', {'product': product})
 
+#location Part
+@login_required
+def location(request):
+    try:
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        region = user_profile.region
+    except UserProfile.DoesNotExist:
+        region = None
+
+    return render(request, 'carrot_app/location.html', {'region' : region})
+
+
+@login_required
+def set_region(request):
+    if request.method == 'POST':
+        region = request.POST.get('region-setting')
+        
+        if region:
+            try:
+                user_profile = UserProfile.objects.get_or_create(user=request.user)
+                user_profile.region = region
+                user_profile.save()
+                return redirect('location')
+            except Exception as e:
+                return JsonResponse({ "status": "error", "message": str(e)})
+        else:
+            return JsonResponse({ "status": "error", "message": "지역 칸이 비어있습니다!"})
+    else:
+        return JsonResponse({ "status": "error", "message": "양식이 올바르지 않습니다!"}, status=405)
+
+@login_required
+def set_region_certification(request):
+    if request.method == "POST":
+        request.user.profile.region_certification = 'Y'
+        request.user.profile.save()
+        messages.success(request, "확인되었습니다!")
+        return redirect('location')
