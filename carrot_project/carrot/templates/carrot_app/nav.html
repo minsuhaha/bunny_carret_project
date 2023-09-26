@@ -14,7 +14,7 @@
             <button id="trade-button">중고거래</button>
           </a>
           {% if user.is_authenticated %}
-            <a href="#">
+            <a href="{% url 'location' %}">
               <button id="location-button">동네인증</button>
             </a>
           {% endif %}
