@@ -11,4 +11,9 @@ urlpatterns = [
     path('', views.main, name="main"), # 메인페이지 url
     path('login/', views.user_login, name='login'), # login url
     path('logout/', auth_views.LogoutView.as_view(next_page='main'), name='logout'), # logout url
+    path('write/', views.write, name='write'), #write url
+    path('alert/<str:alert_message>/', views.alert, name='alert'),
+    path('location/', views.location, name='location'),
+
+
 ]
