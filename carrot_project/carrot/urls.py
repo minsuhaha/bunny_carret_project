@@ -10,4 +10,5 @@ urlpatterns = [
     path('', views.main, name="main"), # 메인페이지 url
     path('login/', views.user_login, name='login'), # login url
     path('logout/', auth_views.LogoutView.as_view(next_page='main'), name='logout'), # logout url
+    path('search/', views.search, name='search'), # 검색 url
 ]
