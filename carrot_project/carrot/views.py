@@ -1,3 +1,4 @@
+from .models import Product
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -34,3 +35,8 @@ def register(request):
         form = CustomRegistrationForm()
     
     return render(request, 'registration/register.html', {'form': form, 'error_message': error_message})
+
+# 중고거래 화면
+def trade(request):
+    top_posts = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
+    return render(request, 'carret_app/trade.html', {'posts': top_posts})
