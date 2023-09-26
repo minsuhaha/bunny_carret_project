@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'django.contrib.humanize',
-
     # 앱명
     'carrot',
 ]

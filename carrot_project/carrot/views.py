@@ -1,9 +1,9 @@
 from .models import Product
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from .forms import CustomRegistrationForm
+from .forms import CustomLoginForm, CustomRegistrationForm
 
 
 # 유저 회원 가입
@@ -39,20 +39,13 @@ def register(request):
 # 중고거래 화면
 def trade(request):
     top_posts = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
-    return render(request, 'carret_app/trade.html', {'posts': top_posts})
-from .models import Product
+    return render(request, 'carrot_app/trade.html', {'posts': top_posts})
 
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect
-from .forms import CustomLoginForm
-from .models import Product
-# Create your views here.
 
 # 메인 화면
 def main(request):
   top_views_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:4]
-  return render(request, 'carret_app/main.html', {'products' : top_views_products})
+  return render(request, 'carrot_app/main.html', {'products' : top_views_products})
 
 #로그인
 def user_login(request):
@@ -75,4 +68,4 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 return redirect('main')  # 로그인 성공 후'main'은 리디렉션할 URL의 이름 혹은 경로
-        return render(request, 'registraion/login.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})

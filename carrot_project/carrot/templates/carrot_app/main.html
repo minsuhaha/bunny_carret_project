@@ -14,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/global.css'%}"/>
 </head>
 <body>
-  <header>{% include "carret_app/nav.html" %}</header>
+  <header>{% include "carrot_app/nav.html" %}</header>
 
   <!-- 모든섹션을 하나의 클래스로 통합(content-box section1) -->
   <!-- 첫번째 섹션 -->
@@ -42,7 +42,7 @@
         <h1>우리 동네<br>중고 직거래 마켓</h1>
         <p>동네 주민들과 가깝고 따뜻한 거래를 지금 경험해보세요</p>
         <!-- trade.html 없는 관계로 주석 처리-->
-        {% comment %} <a href="{% url 'dangun_app:trade' %}"> {% endcomment %}
+        <a href="{% url 'trade' %}">
           <button class="button-gray">인기매물 보기</button>
         </a>
       </div>
@@ -113,10 +113,10 @@
           </div>
           
           <!-- trade 미완성 주석처리 -->
-          <a href="#">인기매물 더 보기</a>
+          <a href="{% url 'trade' %}">인기매물 더 보기</a>
         </div>
       </div>
     </div>
-  {% include "carret_app/footer.html" %}
+  {% include "carrot_app/footer.html" %}
 </body>
 </html>
