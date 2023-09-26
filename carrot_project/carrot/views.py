@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from .forms import CustomLoginForm, CustomRegistrationForm
+from django.db.models import Q
 
 # 메인 화면
 def main(request):
@@ -95,3 +96,14 @@ def trade_post(request, pk):
     return render(request, 'carrot_app/trade_post.html', context)
 
 
+# 상품 검색
+def search(request):
+    query = request.GET.get('search')
+    if query:
+        results = Product.objects.filter(Q(title__icontains=query) | 
+                                         Q(region__icontains=query)|
+                                         Q(seller__username__icontains=query))
+    else:
+        results = Product.objects.all()
+    
+    return render(request, 'carrot_app/search.html', {'posts': results})
