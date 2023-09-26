@@ -1,6 +1,6 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    #어플리케이션 연결
+    path('register/', views.register, name='register'),  # 회원가입 url
 ]
