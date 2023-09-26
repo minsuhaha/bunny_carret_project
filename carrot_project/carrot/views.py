@@ -1,9 +1,12 @@
-from .models import Product
+from django.http import JsonResponse
+from django.contrib import messages
+from .models import Product, UserProfile
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from .forms import CustomLoginForm, CustomRegistrationForm
+from django.contrib.auth.decorators import login_required
 
 
 # 유저 회원 가입
@@ -69,3 +72,42 @@ def user_login(request):
                 login(request, user)
                 return redirect('main')  # 로그인 성공 후'main'은 리디렉션할 URL의 이름 혹은 경로
         return render(request, 'registration/login.html', {'form': form})
+
+
+#location Part
+@login_required
+def location(request):
+    try:
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        region = user_profile.region
+    except UserProfile.DoesNotExist:
+        region = None
+
+    return render(request, 'carrot_app/location.html', {'region' : region})
+
+
+@login_required
+def set_region(request):
+    if request.method == 'POST':
+        region = request.POST.get('region-setting')
+        
+        if region:
+            try:
+                user_profile = UserProfile.objects.get_or_create(user=request.user)
+                user_profile.region = region
+                user_profile.save()
+                return redirect('location')
+            except Exception as e:
+                return JsonResponse({ "status": "error", "message": str(e)})
+        else:
+            return JsonResponse({ "status": "error", "message": "지역 칸이 비어있습니다!"})
+    else:
+        return JsonResponse({ "status": "error", "message": "양식이 올바르지 않습니다!"}, status=405)
+
+@login_required
+def set_region_certification(request):
+    if request.method == "POST":
+        request.user.profile.region_certification = 'Y'
+        request.user.profile.save()
+        messages.success(request, "확인되었습니다!")
+        return redirect('location')
