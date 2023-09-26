@@ -5,7 +5,7 @@
     <div class="full-box flex-box between">
       <div class="flex-box">
         <div class="logo">
-          <a href="#">
+          <a href="{% url 'main' %}">
             <img src="{% static 'img/logo.png' %}" alt=""/>
           </a>
         </div>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="flex-box gap8">
-        <form method="GET" action="#">
+        <form method="GET" action="{% url 'search' %}">
           <input type="text" id="search" name="search" class="search" placeholder="물품이나 동네를 검색해보세요"/>
         </form>
         {% if user.is_authenticated %}

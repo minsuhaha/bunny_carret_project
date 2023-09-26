@@ -42,7 +42,7 @@
           {% for post in posts %}
 
             <div class="card-box">
-              <a href="#" class="trade-text-link">
+              <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
                 <div class="card-img">
                   {% if post.images %}
                     <img src="{{ post.images.url }}" alt="{{ post.title }}">
