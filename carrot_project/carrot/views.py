@@ -1,9 +1,11 @@
-from .models import Product
+from .models import Product, UserProfile
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomLoginForm, CustomRegistrationForm
+from django.contrib.auth.decorators import login_required
+
 
 
 # 유저 회원 가입
@@ -38,14 +40,18 @@ def register(request):
 
 # 중고거래 화면
 def trade(request):
-    top_posts = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
-    return render(request, 'carrot_app/trade.html', {'posts': top_posts})
+    top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
+    return render(request, 'carrot_app/trade.html', {'products': top_products})
 
 
 # 메인 화면
 def main(request):
   top_views_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:4]
   return render(request, 'carrot_app/main.html', {'products' : top_views_products})
+
+# Alert용 화면
+def alert(request, alert_message):
+    return render(request, 'carrot_app/alert.html', {'alert_message': alert_message})
 
 #로그인
 def user_login(request):
@@ -69,3 +75,35 @@ def user_login(request):
                 login(request, user)
                 return redirect('main')  # 로그인 성공 후'main'은 리디렉션할 URL의 이름 혹은 경로
         return render(request, 'registration/login.html', {'form': form})
+
+#거래 글쓰기
+@login_required
+def write(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+        
+        if user_profile.region_certification == 'Y':
+            return render(request, 'carrot_app/write.html')
+        else:
+            return redirect('alert', alert_message='동네인증이 필요합니다.')
+    except User.DoesNotExist:
+        return redirect('alert', alert_message='동네인증이 필요합니다.')
+    
+
+#거래 글 수정
+def edit(request, id):
+    product = get_object_or_404(Product, id=id)
+    if product:
+        product.description = product.description.strip()
+    if request.method == "product":
+        product.title = request.Post['title']
+        product.price = request.Post['price']
+        product.content = request.Post['content']
+        product.region = request.Post['region']
+        if 'images' in request.FILES:
+            product.images = request.FILES['images']
+        product.save()
+        return redirect('trade_product', pk=id)
+
+    return render(request, 'carrot_app/write.html', {'product': product})
+
