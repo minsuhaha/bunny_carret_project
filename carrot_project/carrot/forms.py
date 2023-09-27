@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Manner, Review
 
 # 유저 회원 가입 폼
 class CustomRegistrationForm(forms.Form):
@@ -37,3 +37,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['title', 'price', 'category', 'content', 'region', 'images']
+
+
+class ReviewForm(forms.ModelForm):
+
+    model = Review, Manner
+    fields = ['content', 'score']
