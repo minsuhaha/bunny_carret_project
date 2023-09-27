@@ -17,6 +17,9 @@ urlpatterns = [
     path('create_form/', views.create_post, name='create_form'),
     path('alert/<str:alert_message>/', views.alert, name='alert'),
 
+    #review
+    path('review/', views.review, name='review'),
+
     # location
     path('location/', views.location, name='location'),
     path('set_region/', views.set_region, name='set_region'),
