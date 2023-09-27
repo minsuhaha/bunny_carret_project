@@ -86,19 +86,19 @@ def trade_post(request, pk):
         if request.user != post.seller: # 해당 게시글을 작성한 유저와 다르다면
             post.view_cnt += 1 # 조회수 1 증가
             post.save()
-        else:
-            post.view_cnt += 1
-            post.save()
+    else:
+        post.view_cnt += 1
+        post.save()
 
-        try:
-            user_profile = UserProfile.objects.get(user=post.seller)
-        except UserProfile.DoesNotExist:
-                user_profile = None
+    try:
+        user_profile = UserProfile.objects.get(user=post.seller)
+    except UserProfile.DoesNotExist:
+            user_profile = None
 
-        context = {
-            'post': post,
-            'user_profile': user_profile,
-        }
+    context = {
+        'post': post,
+        'user_profile': user_profile,
+    }
 
     return render(request, 'carrot_app/trade_post.html', context)
 
@@ -125,7 +125,7 @@ def write(request):
         try:
             user_profile = UserProfile.objects.get(user=request.user)
         
-            if user_profile.region_certification == 'Y':
+            if user_profile.region_certification == 'N':
                 return render(request, 'carrot_app/write.html')
             else:
                 return redirect('alert', alert_message='동네인증이 필요합니다.')
