@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomLoginForm, CustomRegistrationForm, PostForm
+from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -210,3 +210,17 @@ def set_region_certification(request):
         request.user.profile.save()
         messages.success(request, "확인되었습니다!")
         return redirect('location')
+    
+
+
+def review (request):
+    form = ReviewForm(data=request.POST or None)
+    
+    if request.method == 'POST':
+           
+             # 입력정보가 유효한 경우 각 필드 정보 가져옴
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            score = form.cleaned_data['score']
+
+    return render(request, 'carrot_app/review.html', {'form': form})
