@@ -37,9 +37,6 @@ def user_login(request):
                 return redirect('main')  # 로그인 성공 후'main'은 리디렉션할 URL의 이름 혹은 경로
         return render(request, 'registration/login.html', {'form': form})
     
-from django.contrib.auth.decorators import login_required
-
-
 
 # 유저 회원 가입
 def register(request):
@@ -101,12 +98,14 @@ def trade_post(request, pk):
 
     return render(request, 'carrot_app/trade_post.html', context)
 
-# Alert용 화면
+# Alert용 화면 - 동네 인증 알람
 def alert(request, alert_message):
     return render(request, 'carrot_app/alert.html', {'alert_message': alert_message})
 
-
-
+#로그인 필요 알람
+def login_alert(request, login_message):
+    login_message = '로그인이 필요합니다.'
+    return render(request, 'carrot_app/login_alert.html', {'login_message': login_message})
 
 # 상품 검색
 def search(request):
@@ -130,7 +129,7 @@ def write(request):
             return render(request, 'carrot_app/write.html')
         else:
             return redirect('alert', alert_message='동네인증이 필요합니다.')
-    except User.DoesNotExist:
+    except UserProfile.DoesNotExist:
         return redirect('alert', alert_message='동네인증이 필요합니다.')
     
 
