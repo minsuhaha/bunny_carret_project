@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Product, UserProfile, Manner, Category
+from .models import Product, UserProfile, Manner, Category, ChatRoom, Message
 
 admin.site.register(Product)
 admin.site.register(UserProfile)
 admin.site.register(Manner)
 admin.site.register(Category)
 
+admin.site.register(ChatRoom)
+admin.site.register(Message)

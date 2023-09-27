@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    # channels 설정
+    'channels',
+    'channels_redis',
 
     # 앱명
     'carrot',
@@ -76,6 +81,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'carrot_project.wsgi.application'
 
+ASGI_APPLICATION = 'carrot_project.asgi.application' # asgi 설정 추가
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -83,11 +98,11 @@ WSGI_APPLICATION = 'carrot_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': secrets["postgresql_name"], # 데이터베이스 이름
-        'USER': secrets["postgresql_user"],
-        'PASSWORD': secrets["postgresql_pwd"],
-        'HOST': secrets["postgresql_host"],
-        'PORT': secrets["postgresql_port"],
+        'NAME': 'carrot_project', # 데이터베이스 이름
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -135,3 +150,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 로그인 url
+LOGIN_URL = '/login/'

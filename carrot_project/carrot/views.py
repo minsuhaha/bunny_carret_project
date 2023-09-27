@@ -130,7 +130,7 @@ def write(request):
             return render(request, 'carrot_app/write.html')
         else:
             return redirect('alert', alert_message='동네인증이 필요합니다.')
-    except User.DoesNotExist:
+    except UserProfile.DoesNotExist:
         return redirect('alert', alert_message='동네인증이 필요합니다.')
     
 
@@ -210,3 +210,7 @@ def set_region_certification(request):
         request.user.profile.save()
         messages.success(request, "확인되었습니다!")
         return redirect('location')
+    
+# chat
+def chat(request):
+    return render(request, "carrot_app/chat.html")

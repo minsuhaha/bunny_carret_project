@@ -56,3 +56,19 @@ class Product(models.Model):
 
 
 
+# 채팅 관련 모델
+class ChatRoom(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='chatroom_product')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chatroom_seller') # 판매자
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chatroom_buyer') # 구매자
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Message(models.Model):
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='message_chatroom')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_receiver')  # 받는이 필드 추가
+    content = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False) # 메세지를 읽었는지 안읽었는지 표시

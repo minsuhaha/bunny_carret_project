@@ -21,4 +21,7 @@ urlpatterns = [
     path('location/', views.location, name='location'),
     path('set_region/', views.set_region, name='set_region'),
     path('set_region_certification/', set_region_certification, name='set_region_certification'),
+
+    # chat
+    path('chat/', views.chat, name='chat'),
 ]
