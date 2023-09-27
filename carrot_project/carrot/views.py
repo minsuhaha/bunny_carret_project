@@ -125,7 +125,7 @@ def write(request):
         try:
             user_profile = UserProfile.objects.get(user=request.user)
         
-            if user_profile.region_certification == 'N':
+            if user_profile.region_certification == 'Y':
                 return render(request, 'carrot_app/write.html')
             else:
                 return redirect('alert', alert_message='동네인증이 필요합니다.')
