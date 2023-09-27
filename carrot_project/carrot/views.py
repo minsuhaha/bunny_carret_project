@@ -16,26 +16,30 @@ def main(request):
 
 #로그인
 def user_login(request):
- # 이미 로그인한 경우
-    if request.user.is_authenticated:
-        return redirect('main')
-    
-    else:
-        form = CustomLoginForm(data=request.POST or None)
-        if request.method == 'POST':
-           
-             # 입력정보가 유효한 경우 각 필드 정보 가져옴
-            if form.is_valid():
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password']
-            
-                user = authenticate(request, username=username, password=password)
+    try:
+        # 이미 로그인한 경우
+        if request.user.is_authenticated:
+            return redirect('main')
+        else:
+            form = CustomLoginForm(data=request.POST or None)
+            if request.method == 'POST':
+                # 입력정보가 유효한 경우 각 필드 정보 가져옴
+                if form.is_valid():
+                    username = form.cleaned_data['username']
+                    password = form.cleaned_data['password']
+                    user = authenticate(request, username=username, password=password)
+                    
+                    # 로그인이 성공한 경우
+                    if user is not None:
+                        login(request, user)
+                        return redirect('main')  # 로그인 성공 후 'main'은 리디렉션할 URL의 이름 혹은 경로
 
-            #로그인이 성공한 경우
-            if user is not None:
-                login(request, user)
-                return redirect('main')  # 로그인 성공 후'main'은 리디렉션할 URL의 이름 혹은 경로
+        # 로그인 폼을 보여줌
         return render(request, 'registration/login.html', {'form': form})
+
+    except UserProfile.DoesNotExist:
+        # UserProfile이 없는 경우 (비회원)
+        return redirect('login_alert', alert_message='로그인이 필요합니다.')
     
 
 # 유저 회원 가입
@@ -104,7 +108,6 @@ def alert(request, alert_message):
 
 #로그인 필요 알람
 def login_alert(request, login_message):
-    login_message = '로그인이 필요합니다.'
     return render(request, 'carrot_app/login_alert.html', {'login_message': login_message})
 
 # 상품 검색
@@ -125,7 +128,7 @@ def write(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user)
         
-        if user_profile.region_certification == 'N':
+        if user_profile.region_certification == 'Y':
             return render(request, 'carrot_app/write.html')
         else:
             return redirect('alert', alert_message='동네인증이 필요합니다.')
