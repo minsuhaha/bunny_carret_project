@@ -106,9 +106,6 @@ def trade_post(request, pk):
 def alert(request, alert_message):
     return render(request, 'carrot_app/alert.html', {'alert_message': alert_message})
 
-#로그인 필요 알람
-def login_alert(request, login_message):
-    return render(request, 'carrot_app/login_alert.html', {'login_message': login_message})
 
 # 상품 검색
 def search(request):
@@ -123,17 +120,21 @@ def search(request):
     return render(request, 'carrot_app/search.html', {'posts': results})
 
 #거래 글쓰기
-@login_required
 def write(request):
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
+    if request.user.is_authenticated: # 로그인이 된 유저면
+        try:
+            user_profile = UserProfile.objects.get(user=request.user)
         
-        if user_profile.region_certification == 'Y':
-            return render(request, 'carrot_app/write.html')
-        else:
+            if user_profile.region_certification == 'Y':
+                return render(request, 'carrot_app/write.html')
+            else:
+                return redirect('alert', alert_message='동네인증이 필요합니다.')
+        except UserProfile.DoesNotExist:
             return redirect('alert', alert_message='동네인증이 필요합니다.')
-    except UserProfile.DoesNotExist:
-        return redirect('alert', alert_message='동네인증이 필요합니다.')
+    
+    else: # 로그인이 되지 않은 유저면 
+        return redirect('alert', alert_message = '로그인이 필요합니다.')
+    
     
 
 #거래 글 수정

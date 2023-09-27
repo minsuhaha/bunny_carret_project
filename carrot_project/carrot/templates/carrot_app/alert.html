@@ -7,9 +7,31 @@
 
   <body>
     <script type="text/javascript">
-      alert('{{ alert_message }}');
-      window.location.href = '{% url "location" %}';
-    </script>
+      var alertMessage = '{{ alert_message }}';
+    
+      if (alertMessage === '로그인이 필요합니다.') {
+          // 로그인 페이지로 이동
+          alert('{{ alert_message }}');
+          window.location.href = '{% url "login" %}';
+
+      } else if (alertMessage === '동네인증이 필요합니다.') {
+          // 'location' 페이지로 이동
+          alert('{{ alert_message }}');
+          window.location.href = '{% url "location" %}';
+
+      } else {
+          // 다른 경우에 대한 처리 (예: 기본 동작 설정)
+          // 예를 들어, 특별한 처리가 없는 경우 홈페이지로 이동하도록 설정
+          window.location.href = '/';
+      }
+  </script>
+  
+  
+  
+  
+  
+  
+  
   </body>
 
 </html>
