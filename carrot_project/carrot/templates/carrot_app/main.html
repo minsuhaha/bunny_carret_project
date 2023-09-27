@@ -84,7 +84,7 @@
         <h1>중고거래 인기매물</h1>
         <div class="full-box trade-box">
           <div class="flex-box full-box card-container between">
-            {% for post in products %}
+            {% for post in posts %}
             <div class="card-box">
               <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
                 

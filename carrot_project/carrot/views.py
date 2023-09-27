@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product, UserProfile, UserProfile, Categroy
+from .models import Product, UserProfile, UserProfile, Category
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -12,7 +12,7 @@ from django.db.models import Q
 # 메인 화면
 def main(request):
   top_views_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:4]
-  return render(request, 'carrot_app/main.html', {'products' : top_views_products})
+  return render(request, 'carrot_app/main.html', {'posts' : top_views_products})
 
 #로그인
 def user_login(request):
@@ -74,7 +74,7 @@ def register(request):
 # 중고거래 화면
 def trade(request):
     top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
-    return render(request, 'carrot_app/trade.html', {'products': top_products})
+    return render(request, 'carrot_app/trade.html', {'posts': top_products})
 
 # 중고거래 상세정보 화면
 def trade_post(request, pk):
@@ -138,18 +138,24 @@ def write(request):
 def edit(request, id):
     product = get_object_or_404(Product, id=id)
     if product:
-        product.description = product.description.strip()
-    if request.method == "product":
-        product.title = request.Post['title']
-        product.price = request.Post['price']
-        product.content = request.Post['content']
-        product.region = request.Post['region']
+        product.content = product.content.strip()
+    if request.method == "POST":
+        product.title = request.POST['title']
+        product.price = request.POST['price']
+        product.content = request.POST['content']
+        product.region = request.POST['region']
+        
+        # 카테고리 저장과정
+        category_id = request.POST['category']
+        category = get_object_or_404(Category, id=category_id)
+        product.category = category
+
         if 'images' in request.FILES:
             product.images = request.FILES['images']
         product.save()
-        return redirect('trade_product', pk=id)
+        return redirect('trade_post', pk=id)
 
-    return render(request, 'carrot_app/write.html', {'product': product})
+    return render(request, 'carrot_app/write.html', {'post': product})
 
 # 포스트 업로드
 @login_required

@@ -28,7 +28,7 @@
               </div>
               {% if request.user == post.seller %}
                 <div class="flex-box button-box">
-                  <a href="#">
+                  <a href="{% url 'edit' post.id %}">
                     <button class="grey">수정하기</button>
                   </a>
                   <button class="orange">채팅보기</button>

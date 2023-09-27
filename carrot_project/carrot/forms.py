@@ -36,4 +36,4 @@ class CustomLoginForm(forms.Form):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'price', 'content', 'region', 'images']
+        fields = ['title', 'price', 'category', 'content', 'region', 'images']

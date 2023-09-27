@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='main'), name='logout'), # logout url
     path('search/', views.search, name='search'), # 검색 url
     path('write/', views.write, name='write'), #write url
+    path('edit/<int:id>/', views.edit, name='edit'), # edit url
     path('create_form/', views.create_post, name='create_form'),
     path('alert/<str:alert_message>/', views.alert, name='alert'),
 
