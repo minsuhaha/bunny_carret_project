@@ -23,5 +23,6 @@ urlpatterns = [
     path('set_region_certification/', set_region_certification, name='set_region_certification'),
 
     # chat
-    path('chat/', views.chat, name='chat'),
+    path('chat/', views.chatroom_list, name='chatroom'),
+    path('chat/<int:chatroom_id>/', views.chatroom, name='chatroom_ws'),
 ]

@@ -1,4 +1,4 @@
-{% load static%}{% load humanize %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
     <title>채팅하기</title>
   </head>
 
@@ -49,71 +49,153 @@
                 </div>
               </div>
               <!-- 채팅방리스트 -->
-              <div class="flex-box chat-box between">
+              {% if chatrooms %}
+              {% for chatroom in chatrooms %}
+              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:chatroom_ws' chatroom.chatroom.id%}";'>
                 <div>
                   <div class="flex-box">
-                    <p class="bold">상대방아이디</p>
-                    <p class="s-text">화곡동</p>
-                    <p class="s-text">3주전</p>
+                    <p class="bold">{{ chatroom.chat_partner.username }}</p>
+                    <p class="s-text">{{ chatroom.chat_partner.region }}</p>
+                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
+                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
+                    
                   </div>
-                  <p class="chat-thumb-text">거래 잘 하셨나요? 거래한 이웃..</p>
+                  <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
                 </div>
                 <div class="thumbnail-box">
-                  <img src="" alt="">
+                  <img src="{{ chatroom.product.images.url }}" alt="{{ chatroom.product.title }}">
                 </div>
               </div>
+              {% endfor %}
+              {% endif %}
             </div>
           </div>
-
           <!-- 채팅창-->
-          <div class="chat-main-container">
+          {% if selected_chatroom %}
+            <div class="chat-main-container">
             <div>
-              <div class="contact-info flex-box">
-                상대방아이디
-                <div class="temp">
-                  36.9도
+                <div class="contact-info flex-box">
+                    {{ chat_partner.username }}
+                    <div class="temp">
+                        {{ chat_partner.manner }}
+                    </div>
                 </div>
-              </div>
 
               <!--물품정보-->
               <div class="goods-box flex-box between">
                 <div class="flex-box">
                   <div class="selected-thumbnail-box">
-                    <img src="" alt="">
+                    <img src="{{ product.images.url }}" alt="{{ product.images.title }}">
                   </div>
                   <div class="goods-info-box">
-                    <p>LG 양문형 냉장고 778L</p>
-                    <p class="bold">150,000원</p>
+                    <p>{{ product.title }}</p>
+                    <p class="bold">{{ product.price }}</p>
                   </div>
                 </div>
-                <button>거래완료</button>
+                <button>{{ product.product_reserved }}</button>
+                <button>{{ product.product_sold }}</button>
               </div>
 
               <!--채팅창 메인-->
+              {% if messages %}
               <div class="chat-container">
-                <div class="message-box from-you">
-                  <div class="message-text">입금확인했습니다~</div>
-                  <p class="s-text">오전 8:20</p>
-                </div>
-                <div class="message-box from-me">
-                  <p class="s-text">오전 8:20</p>
-                  <div class="message-text">네 좋은물건 감사합니다~</div>
-                </div>
+                {% for message in messages %}
+                    {% if message.sender == user.id %}
+                        <div class="message-box from-me">
+                            <p class="s-text">{{ message.sent_at }}</p>
+                            <div class="message-text">{{ message.content }}</div>
+                        </div>
+                    {% else %}
+                        <div class="message-box from-you">
+                            <div class="message-text">{{ message.content }}</div>
+                            <p class="s-text">{{ message.sent_at }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
               </div>
+                {% endif %}
             </div>
 
-            <form class="chat-input" action="submit">
-              <textarea name="" id="" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
+            <form class="chat-input">
+              <textarea name="" id="message-textarea" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
               <div>
-                <button>전송</button>
+                <button id="sendButton">전송</button>
               </div>
             </form>
+          {% endif %}
           </div>
         </div>
       </div>
     </div>
     {% include 'carrot_app/footer.html' %}
+    
+    <!-- script -->
+    {{ selected_chatroom.id|json_script:"selected-chatroom-id" }}
+    {{ chat_partner.id|json_script:"chat-partner-id" }}
+    <script>
+      const chatSocket = new WebSocket("ws://" + window.location.host + "{{ ws_path }}" + '/default_room/');
 
+      // WebSocket 연결 이벤트 리스너
+      chatSocket.onopen = function () {
+          console.log("WebSocket 연결이 열렸습니다.");
+      };
+
+      // WebSocket 연결 종료 이벤트 리스너
+      chatSocket.onclose = function () {
+          console.log("WebSocket 연결이 종료되었습니다.");
+      };
+
+      // 메시지 수신 처리
+      chatSocket.onmessage = function (event) {
+          const data = JSON.parse(event.data);
+          const chatContainer = document.querySelector('.chat-container')
+
+          // 메시지를 생성하고 HTML로 포맷팅
+          const messageElement = document.createElement('div');
+          if(data.sender_id === {{user.id}}) {
+              messageElement.classList.add('message-box', 'from-me');
+          } else {
+              messageElement.classList.add('message-box', 'from-you');
+          }
+          const sentAtElement = document.createElement('p');
+          sentAtElement.classList.add('s-text');
+          sentAtElement.textContent = data.sent_at;
+          const messageTextElement = document.createElement('div');
+          messageTextElement.classList.add('message-text');
+          messageTextElement.textContent = data.message;
+
+          // 메시지 요소를 채팅 컨테이너에 추가
+          messageElement.appendChild(sentAtElement);
+          messageElement.appendChild(messageTextElement);
+          chatContainer.appendChild(messageElement);
+      };
+
+      // chatSocket으로 메시지 전달
+      document.addEventListener("DOMContentLoaded", function() {
+        // 문서가 완전히 로드된 후에 이벤트 리스너를 추가함  
+        const sendButton = document.getElementById('sendButton');
+        sendButton.addEventListener('click', function(event){
+            event.preventDefault(); //form의 기본 제출 동작을 방지함
+
+            const messageInputDom = document.querySelector('#message-textarea');
+            const message = messageInputDom.value;
+            const chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
+            const receiverId = JSON.parse(document.getElementById('chat-partner-id').textContent);
+
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'chatroom_id': chatRoomId,
+                'receiver_id': receiverId
+            }));
+            messageInputDom.value = '';
+        })
+      })
+      
+      
+
+      
+    </script>
   </body>
 
 </html>

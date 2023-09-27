@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # channels 설정
-    'channels',
-    'channels_redis',
+    # 'channels',
+    # 'channels_redis',
 
     # 앱명
     'carrot',
