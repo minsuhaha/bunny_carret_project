@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
@@ -51,7 +52,7 @@
               <!-- 채팅방리스트 -->
               {% if chatrooms %}
               {% for chatroom in chatrooms %}
-              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:chatroom_ws' chatroom.chatroom.id%}";'>
+              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'chatroom_ws' chatroom.chatroom.id%}";'>
                 <div>
                   <div class="flex-box">
                     <p class="bold">{{ chatroom.chat_partner.username }}</p>
@@ -93,7 +94,6 @@
                   </div>
                 </div>
                 <button>{{ product.product_reserved }}</button>
-                <button>{{ product.product_sold }}</button>
               </div>
 
               <!--채팅창 메인-->
@@ -134,7 +134,7 @@
     {{ selected_chatroom.id|json_script:"selected-chatroom-id" }}
     {{ chat_partner.id|json_script:"chat-partner-id" }}
     <script>
-      const chatSocket = new WebSocket("ws://" + window.location.host + "{{ ws_path }}" + '/default_room/');
+      const chatSocket = new WebSocket("ws://" + window.location.host + "{{ ws_path }}" + '/');
 
       // WebSocket 연결 이벤트 리스너
       chatSocket.onopen = function () {

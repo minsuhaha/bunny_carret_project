@@ -212,18 +212,6 @@ def set_region_certification(request):
         return redirect('location')
     
 # chat
-def chat(request):
-    return render(request, "carrot_app/chat.html")
-
-
-@login_required
-def chatroom_list(request):
-    # 채팅방 리스트 중 하나를 클릭했을 경우
-    # if request.method == "POST":
-    #     chatroom_id = request.
-
-    # chat 화면을 처음 들어왔을 경우 채팅방 리스트를 뿌려줌
-    user = request.user
 
 def get_chatrooms_context(user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색

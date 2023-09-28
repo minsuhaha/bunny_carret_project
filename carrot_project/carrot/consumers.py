@@ -11,8 +11,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 클라이언트가 WebSocket 연결을 시도할 때 호출되며,
     # 연결을 수락하고 그룹에 사용자를 추가합니다.
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f'chat_{self.room_name}'
+        self.room_pk = self.scope['url_route']['kwargs']['room_pk']
+        self.room_group_name = f'chat_{self.room_pk}'
 
         # Join room group
         await self.channel_layer.group_add(
