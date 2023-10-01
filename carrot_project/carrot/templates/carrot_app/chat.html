@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -97,10 +96,10 @@
               </div>
 
               <!--채팅창 메인-->
-              {% if messages %}
+              {% comment %} {% if messages %} {% endcomment %}
               <div class="chat-container">
                 {% for message in messages %}
-                    {% if message.sender == user.id %}
+                    {% if message.sender == user %}
                         <div class="message-box from-me">
                             <p class="s-text">{{ message.sent_at }}</p>
                             <div class="message-text">{{ message.content }}</div>
@@ -114,7 +113,7 @@
                 {% endfor %}
                 <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
               </div>
-                {% endif %}
+                {% comment %} {% endif %} {% endcomment %}
             </div>
 
             <form class="chat-input">
@@ -146,30 +145,39 @@
           console.log("WebSocket 연결이 종료되었습니다.");
       };
 
+
       // 메시지 수신 처리
       chatSocket.onmessage = function (event) {
-          const data = JSON.parse(event.data);
-          const chatContainer = document.querySelector('.chat-container')
+        const data = JSON.parse(event.data);
+        const chatContainer = document.querySelector('.chat-container');
+        console.log("수신한 메시지:", data); // 메시지 디버깅을 위해 콘솔에 출력
+        // 메시지를 생성하고 HTML로 포맷팅
+        const messageElement = document.createElement('div');
+        if (data.sender_id === {{ user.id }}) {
+            messageElement.classList.add('message-box', 'from-me');
+        } else {
+            messageElement.classList.add('message-box', 'from-you');
+        }
+        const sentAtElement = document.createElement('p');
+        sentAtElement.classList.add('s-text');
+        sentAtElement.textContent = data.sent_at;
+        const messageTextElement = document.createElement('div');
+        messageTextElement.classList.add('message-text');
+        messageTextElement.textContent = data.message;
 
-          // 메시지를 생성하고 HTML로 포맷팅
-          const messageElement = document.createElement('div');
-          if(data.sender_id === {{user.id}}) {
-              messageElement.classList.add('message-box', 'from-me');
-          } else {
-              messageElement.classList.add('message-box', 'from-you');
-          }
-          const sentAtElement = document.createElement('p');
-          sentAtElement.classList.add('s-text');
-          sentAtElement.textContent = data.sent_at;
-          const messageTextElement = document.createElement('div');
-          messageTextElement.classList.add('message-text');
-          messageTextElement.textContent = data.message;
-
-          // 메시지 요소를 채팅 컨테이너에 추가
+        
+         // 메시지 요소를 채팅 컨테이너에 추가
+         if (chatContainer) {
           messageElement.appendChild(sentAtElement);
           messageElement.appendChild(messageTextElement);
           chatContainer.appendChild(messageElement);
+         
+
+        // 채팅 컨테이너 스크롤을 가장 아래로 이동
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
       };
+      
 
       // chatSocket으로 메시지 전달
       document.addEventListener("DOMContentLoaded", function() {
@@ -188,12 +196,12 @@
                 'chatroom_id': chatRoomId,
                 'receiver_id': receiverId
             }));
+            console.log("전송한 메시지:", message); // 메시지 전송을 디버깅하기 위해 콘솔에 출력
             messageInputDom.value = '';
-        })
-      })
-      
-      
+        });
+      });
 
+    
       
     </script>
   </body>

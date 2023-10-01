@@ -36,7 +36,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         chatroom_id = text_data_json['chatroom_id']
-        sender_id = self.scope['user'].id
+        sender_id = self.scope['user'].id # 현재 요청을 보낸 사용자 id
         receiver_id = text_data_json['receiver_id']
         sent_at = datetime.now().isoformat()
         
@@ -73,7 +73,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 메시지 형식에 맞춰 데이터베이스에 저장합니다
     @database_sync_to_async
     def save_message(self, chatroom_id, sender_id, receiver_id, message):
-        Message.objects.create(chatroom=chatroom_id, sender=sender_id, receiver=receiver_id, content=message)
+        Message.objects.create(chatroom=chatroom_id, sender_id=sender_id, receiver_id=receiver_id, content=message)
 
     # chatroom의 id로 chatroom 인스턴스를 가져옵니다.
     @database_sync_to_async        

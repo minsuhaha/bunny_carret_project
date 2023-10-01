@@ -27,19 +27,18 @@
                 <p>{{ user_profile.region }}</p>
               </div>
               {% if request.user == post.seller %}
-                <div class="flex-box button-box">
-                  <a href="{% url 'edit' post.id %}">
-                    <button class="grey">수정하기</button>
-                  </a>
-                  <button class="orange">채팅보기</button>
-                </div>
+              <div class="flex-box button-box">
+                <a href="{% url 'edit' post.id %}">
+                  <button class="grey">수정하기</button>
+                </a>
+                <button class="orange" onclick="openChatroom()">채팅보기</button>
+              </div>
               {% else %}
-                <div class="button-box">
-                  <a href="{% url 'chatroom' %}">
-                    <button class="orange">채팅하기</button>
-                  </a>
-                </div>
+              <div class="button-box">
+                <button class="orange" onclick="openChatroom()">채팅하기</button>
+              </div>
               {% endif %}
+
             </div>
             <hr class="line">
             <div class="post-info-box">
@@ -64,4 +63,46 @@
 
   </body>
 
+  <script>
+    // "채팅하기" 버튼 클릭 시 실행될 함수
+    function openChatroom() {
+      // 물건 정보, buyer, seller 등의 데이터를 수집
+      const productId = '{{ post.id }}';
+      const sellerId = '{{ post.seller.id }}';
+
+      // 현재 로그인한 사용자의 ID 가져오기 (예: Django에서는 request.user.id로 얻을 수 있음)
+      const buyerId = '{{ request.user.id }}'; // 이 부분은 Django 템플릿 태그를 사용하여 로그인한 사용자의 ID를 가져오는 것입니다.
+      
+      // AJAX 또는 fetch를 사용하여 서버에 요청을 보냅니다.
+      fetch('{% url 'open_or_create_chatroom' %}', {
+        method: 'POST',  // HTTP 메서드 설정
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',  // Django CSRF 토큰을 전송합니다.
+          'Content-Type': 'application/json',
+          'Accept': 'application/json', // JSON 응답을 요청합니다.
+        },
+        body: JSON.stringify({  // 물건, buyer, seller 정보를 서버로 전송
+          product_id: productId,
+          buyer_id: buyerId,
+          seller_id: sellerId,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // 채팅방이 성공적으로 열렸을 때 실행할 코드
+        if (data.success) {
+          // 열린 채팅방의 URL로 이동합니다.
+          window.location.href = data.chatroom_url;
+        } else {
+          // seller와 buyer가 같은 사람일때 해당 물건에 대한 채팅방이 아직 존재하지않는다면
+          alert('해당 물건에 대한 채팅방이 존재하지 않습니다.');
+      }
+      })
+      .catch(error => {
+        console.error('채팅방 열기 오류:', error);
+      });
+    }
+  </script>
+
+  
 </html>

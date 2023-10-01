@@ -1,5 +1,6 @@
 body{
     background-color: #f8f9fa;
+    overflow-y: auto; /* 세로 스크롤을 표시하도록 설정 */
 }
 
 .profile-img{
@@ -109,7 +110,9 @@ hr{
 }
 
 .chat-list-box{
-    width: 100%;    
+    width: 100%;
+    max-height: 520px; /* 채팅방리스트 스크롤을 위해 세로 길이 설정 (하민수) */
+    overflow-y: auto; /* 채팅방리스트 세로로 스크롤 */
 }
 
 .chat-box{
@@ -196,8 +199,8 @@ hr{
 /* 채팅창 메인 */
 .chat-container{
     padding: 14px 20px;
-    max-height: 500px;
-    overflow-y: auto; 
+    max-height: 250px; /* 채팅방리스트 스크롤을 위해 세로 길이 설정 (하민수) */
+    overflow-y: auto;  /* 채팅방리스트 세로로 스크롤 */
 }
 
 .message-box{
@@ -213,14 +216,22 @@ hr{
     border-radius: 20px;
 }
 
+/* 채팅 위아래 간격 수정 */
 .from-me{
     justify-content: flex-end;
+    margin-bottom: 10px; /* from-me 채팅 위아래 마진 간격 */
 }
 
 .from-me div{
     background-color: #fa6616;
     color: #fff;
 }
+
+/* 채팅 위아래 간격 수정 */
+.from-you {
+    margin-bottom: 10px; /* from-you 채팅 위아래 마진 간격 */
+}
+
 
 /* 작성창 */
 .chat-input{
