@@ -153,7 +153,7 @@
         console.log("수신한 메시지:", data); // 메시지 디버깅을 위해 콘솔에 출력
         // 메시지를 생성하고 HTML로 포맷팅
         const messageElement = document.createElement('div');
-        if (data.sender_id === {{ user.id }}) {
+        if (data.sender_id === {{ request.user.id }}) {
             messageElement.classList.add('message-box', 'from-me');
         } else {
             messageElement.classList.add('message-box', 'from-you');
@@ -164,29 +164,24 @@
         const messageTextElement = document.createElement('div');
         messageTextElement.classList.add('message-text');
         messageTextElement.textContent = data.message;
-
         
-         // 메시지 요소를 채팅 컨테이너에 추가
-         if (chatContainer) {
-          messageElement.appendChild(sentAtElement);
-          messageElement.appendChild(messageTextElement);
-          chatContainer.appendChild(messageElement);
-         
-
-        // 채팅 컨테이너 스크롤을 가장 아래로 이동
+        messageElement.appendChild(sentAtElement);
+        messageElement.appendChild(messageTextElement);
+        chatContainer.appendChild(messageElement);
+        
+        // 채팅 입력 후 스크롤을 가장 밑으로 내려주기 -> 최신 메세지를 화면에 나타나도록 
         chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
-      };
+    };
       
 
       // chatSocket으로 메시지 전달
+      // '전송' 버튼 및 '엔터' 키로 메시지 보내기
       document.addEventListener("DOMContentLoaded", function() {
-        // 문서가 완전히 로드된 후에 이벤트 리스너를 추가함  
+        // 문서가 완전히 로드된 후에 이벤트 리스너를 추가함
         const sendButton = document.getElementById('sendButton');
-        sendButton.addEventListener('click', function(event){
-            event.preventDefault(); //form의 기본 제출 동작을 방지함
+        const messageInputDom = document.querySelector('#message-textarea');
 
-            const messageInputDom = document.querySelector('#message-textarea');
+        function sendMessage() {
             const message = messageInputDom.value;
             const chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
             const receiverId = JSON.parse(document.getElementById('chat-partner-id').textContent);
@@ -198,11 +193,31 @@
             }));
             console.log("전송한 메시지:", message); // 메시지 전송을 디버깅하기 위해 콘솔에 출력
             messageInputDom.value = '';
-        });
-      });
+        }
 
+        // '전송' 버튼 클릭 이벤트
+        sendButton.addEventListener('click', function(event) {
+            event.preventDefault(); // 폼의 기본 제출 동작을 방지함
+            sendMessage();
+        });
+
+        // '엔터' 키 이벤트
+        messageInputDom.addEventListener('keypress', function(event) {
+            // 엔터 키의 keyCode는 13입니다.
+            if (event.keyCode === 13) {
+                // 엔터 키에 의한 폼 제출을 방지합니다.
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // 페이지가 로드될 때 스크롤을 가장 하단으로 이동시켜서 최신 메세지부터 나오도록 설정
+       const chatContainer = document.querySelector('.chat-container');
+       if (chatContainer) {
+           chatContainer.scrollTop = chatContainer.scrollHeight;
+       }
+      });
     
-      
     </script>
   </body>
 
