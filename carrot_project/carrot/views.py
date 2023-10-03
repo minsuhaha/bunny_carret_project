@@ -270,13 +270,6 @@ def chatroom(request, chatroom_id):
     selected_chatroom = ChatRoom.objects.get(id=chatroom_id)
     if selected_chatroom.seller == user:
         chat_partner = User.objects.get(id=selected_chatroom.buyer_id)
-
-    # 채팅 상대 정보
-    chatroom = ChatRoom.objects.get(id=chatroom_id)
-
-    if chatroom.seller == user:
-        chat_partner = User.objects.get(id=chatroom.buyer_id)
-
     else:
         chat_partner = User.objects.get(id=selected_chatroom.seller_id)
 
