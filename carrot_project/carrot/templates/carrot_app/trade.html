@@ -42,25 +42,45 @@
           {% for post in posts %}
 
             <div class="card-box">
+              <!--로그인 된 유저라면-->
+              {% if user.is_authenticated %} 
               <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
-                <div class="card-img">
-                  {% if post.images %}
-                    <img src="{{ post.images.url }}" alt="{{ post.title }}">
-                  {% endif %}
-                </div>
-                <div class="card-info-box">
-                  <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price |intcomma}}원</p>
-                  <p>{{ post.region }}</p>
-                  <div class="flex-box">
-                    <p>조회
-                      {{ post.view_cnt }}</p>
-                    <p>·</p>
-                    <p>채팅
-                      {{ post.chat_cnt }}</p>
+                  <div class="card-img">
+                      {% if post.images %}
+                          <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                      {% endif %}
                   </div>
-                </div>
+                  <div class="card-info-box">
+                      <h5>{{ post.title }}</h5>
+                      <p class="bold">{{ post.price | intcomma }}원</p>
+                      <p>{{ post.region }}</p>
+                      <div class="flex-box">
+                          <p>조회 {{ post.view_cnt }}</p>
+                          <p>·</p>
+                          <p>채팅 {{ post.chat_cnt }}</p>
+                      </div>
+                  </div>
               </a>
+               <!--로그인 되지 않은 유저라면-->
+          {% else %}
+            <a href="javascript:void(0);" class="trade-text-link" onclick="showLoginAlert()">
+                  <div class="card-img">
+                      {% if post.images %}
+                          <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                      {% endif %}
+                  </div>
+                  <div class="card-info-box">
+                      <h5>{{ post.title }}</h5>
+                      <p class="bold">{{ post.price | intcomma }}원</p>
+                      <p>{{ post.region }}</p>
+                      <div class="flex-box">
+                          <p>조회 {{ post.view_cnt }}</p>
+                          <p>·</p>
+                          <p>채팅 {{ post.chat_cnt }}</p>
+                      </div>
+                  </div>
+              </a>
+          {% endif %}
             </div>
           {% endfor %}
 
@@ -72,4 +92,10 @@
 
 </body>
 
+<script type="text/javascript">
+  function showLoginAlert() {
+      alert("로그인을 먼저 해주세요.");
+      window.location.href = '{% url "login" %}';
+  }
+</script>
 </html>
