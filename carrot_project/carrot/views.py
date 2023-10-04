@@ -217,17 +217,11 @@ def set_region(request):
             
 @login_required
 def set_region_certification(request):
-    if request.method == "POST":
-        try:
-            certification = UserProfile.objects.get(user=request.user)
-            certification.region_certification = 'Y'
-            certification.save()
-            messages.success(request, "인증되었습니다")
-        except UserProfile.DoesNotExist:
-            certification = UserProfile(user=request.user, region_certification='Y')
-            certification.save()
-
-    return render(request, 'carrot_app/main.html')
+    request.user.profile.region_certification = 'Y'
+    request.user.profile.save()
+    # messages.success(request, "인증되었습니다")
+    
+    return redirect('main')
     
 # chat
 def get_chatrooms_context(user):
