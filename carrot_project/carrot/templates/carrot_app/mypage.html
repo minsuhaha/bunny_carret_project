@@ -18,10 +18,13 @@
     {% include "carrot_app/nav.html" %}
 
     <div class="my">
-        <h3 id ="myid">{{ user }}<h3>
-        <p id="my1">내 매너 : </p>
-        <p id="my2">내 리뷰 :</p>
-        <p id="my3">내 거래 :</p>
+        <h3 id ="myid">{{ user }}</h3>
+        <div class = 'containers'>
+            <p id="my1">내 매너 : </p>
+            <p id="my2">내 리뷰 :</p>
+            <p id="my3">내 거래 :</p>
+        </div>
+        
     </div>
 
     {% include "carrot_app/footer.html" %}

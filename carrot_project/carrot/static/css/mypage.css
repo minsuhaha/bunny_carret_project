@@ -1,11 +1,19 @@
 .my{
-    margin-top: 200px;
+    margin-top: 4rem;
     align-items:center;
     border:bold 1px;
     text-align: center;
     justify-content: center;
     flex-direction: column;
     display:flex;
+}
+
+.containers{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 #my1, #my2, #my3{
