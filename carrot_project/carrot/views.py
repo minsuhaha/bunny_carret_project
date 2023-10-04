@@ -200,6 +200,10 @@ def location(request):
 def set_region(request):
     if request.method == 'POST':
         region = request.POST.get('region-setting')
+
+        context = {
+            'region': region,
+        }
         
         if region:
             try:
