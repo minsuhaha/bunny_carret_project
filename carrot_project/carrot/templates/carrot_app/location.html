@@ -55,6 +55,7 @@
     <!--카카오 api key-->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06b71a5db40aca812f7ae8bff82d58b9&libraries=services"></script>
     <script>
+      let regionSaveButton = document.getElementById("region-save-button");
       //지도 현재위치로 보여주기
       let mapContainer = document.getElementById("map"),
       mapOption = {
@@ -140,6 +141,7 @@ function displayMarker(locPosition, message) {
   map.setCenter(locPosition);
 }
 
+
 document.getElementById("region-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -151,6 +153,7 @@ document.getElementById("region-form").addEventListener("submit", function (e) {
     alert("지역을 입력해주세요");
   }
 });
+
 regionSaveButton.addEventListener("click", function () {
   alert("인증이 완료되었습니다");
 });
