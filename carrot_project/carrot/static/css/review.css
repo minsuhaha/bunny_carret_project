@@ -40,7 +40,7 @@ main{
 
 
 .review-button{
-    background-color: #ffa500;
+    background-color: #fa6616;
     border: 0px;
     border-radius: 1rem;
     padding: 1rem;
@@ -51,7 +51,7 @@ main{
 }
 
 .review-button:hover{
-    background-color: #e19200;
+    background-color: #e75c11;
     font-weight: 700;
 }
 
