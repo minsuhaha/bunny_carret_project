@@ -363,11 +363,8 @@ def review (request):
     if request.method == 'POST':
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
-            post = form.save()
-            post.content = request.post["content"]
-            post.score = request.post["score"]
-            post.save()  # 최종 저장
-            return redirect('trade_post', pk=post.pk)  # 저장 후 상세 페이지로 이동
+            form.save()  # 저장
+            return redirect('main')  # 저장 후 메인 페이지로 이동
     else:
         form = ReviewForm()
 
