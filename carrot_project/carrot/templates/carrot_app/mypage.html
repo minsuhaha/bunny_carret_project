@@ -7,26 +7,23 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css'%}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css'%}"/>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        .my{
-            margin-top: 10%;
-            align-self:center;
-        }
-        
-    </script>
+
     <title>마이페이지</title>
 </head>
-<div class="my">
-{% include "carrot_app/nav.html" %}
-</div>
+
 <body>
+    {% include "carrot_app/nav.html" %}
+
     <div class="my">
-        <p>내 매너 : </p>
-        <p>내 리뷰 :</p>
-        <p>내 거래 :</p>
+        <h3 id ="myid">{{ user }}<h3>
+        <p id="my1">내 매너 : </p>
+        <p id="my2">내 리뷰 :</p>
+        <p id="my3">내 거래 :</p>
     </div>
-   
+
+    {% include "carrot_app/footer.html" %}
 </body>
-{% include "carrot_app/footer.html" %}
 </html>
