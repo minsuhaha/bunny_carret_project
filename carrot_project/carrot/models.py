@@ -2,12 +2,13 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # 유저 관련 모델
 class Manner(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_seller') # 판매자 
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_buyer') # 구매자
-    score = models.IntegerField() # 판매자 매너 점수
+    score = models.IntegerField(("매너온도"), validators=[MinValueValidator(0), MaxValueValidator(100)], default=50) # 판매자 매너 점수
     created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
 
     def __str__(self):
