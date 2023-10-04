@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomLoginForm, CustomRegistrationForm, PostForm
+from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.urls import reverse
@@ -354,3 +354,21 @@ def open_or_create_chatroom(request):
             return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
 
     
+    
+
+
+def review (request):
+    
+    
+    if request.method == 'POST':
+        form = ReviewForm(data=request.POST or None)
+        if form.is_valid():
+            post = form.save()
+            post.content = request.post["content"]
+            post.score = request.post["score"]
+            post.save()  # 최종 저장
+            return redirect('trade_post', pk=post.pk)  # 저장 후 상세 페이지로 이동
+    else:
+        form = ReviewForm()
+
+    return render(request, 'carrot_app/review.html', {'form': form})
