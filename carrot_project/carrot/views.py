@@ -214,13 +214,17 @@ def set_region_certification(request):
 
 
 def review (request):
-    form = ReviewForm(data=request.POST or None)
+    
     
     if request.method == 'POST':
-           
-             # 입력정보가 유효한 경우 각 필드 정보 가져옴
+        form = ReviewForm(data=request.POST or None)
         if form.is_valid():
-            content = form.cleaned_data['content']
-            score = form.cleaned_data['score']
+            post = form.save()
+            post.content = request.post["content"]
+            post.score = request.post["score"]
+            post.save()  # 최종 저장
+            return redirect('trade_post', pk=post.pk)  # 저장 후 상세 페이지로 이동
+    else:
+        form = ReviewForm()
 
     return render(request, 'carrot_app/review.html', {'form': form})
