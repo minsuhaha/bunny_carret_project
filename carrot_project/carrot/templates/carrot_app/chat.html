@@ -39,7 +39,7 @@
             <!-- 채팅 리스트 -->
             <div class="chat-list-box flex-box column">
               <!-- 봇 -->
-              <div class="chat-box flex-box">
+              <div class="chat-box flex-box" style="cursor: pointer;" onclick='location.href="{% url 'chatbot' %}";'>
                 <div class="ai-profile">
                   <img src="{% static 'img/icon_aibot.png'%}" alt="">
                 </div>
@@ -108,7 +108,7 @@
                   {% else %}
                   <button type="button">거래완료</button>
                   {% endif %}
-                {% endif %}
+                {% endif%}
               </div>
 
               <!--채팅창 메인-->
