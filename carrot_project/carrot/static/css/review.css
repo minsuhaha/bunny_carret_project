@@ -1,8 +1,8 @@
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-.rate { display: inline-block;border: 0;margin-right: 15px; align-self: center;}
+.rate { display: inline-block;border: 0;margin-right: 15px; align-self: center; margin: 2rem;}
 .rate > input {display: none;}
 .rate > label {float: right;color: #ddd}
-.rate > label:before {display: inline-block;font-size: 3rem;padding: .3rem .2rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
+.rate > label:before {display: inline-block;font-size: 4rem;padding: .3rem .2rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
 .rate .half:before {content: "\f089 "; position: absolute;padding-right: 0;}
 .rate input:checked ~ label, 
 .rate label:hover,.rate label:hover ~ label { color: orange !important;  } 
@@ -12,13 +12,52 @@
 .rate label:hover ~ input:checked ~ label { color: orange !important;  }
 
 
+html{
+    height: -webkit-fill-available;
+}
 
+body{
+    height: 70%;
+}
 
 main{
     margin-top:70px;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .review-form{
     display: flex;
     flex-direction: column;
+    margin: 0 5rem;
+}
+
+.login-container{
+    width: 80%;
+}
+
+
+.review-button{
+    background-color: #ffa500;
+    border: 0px;
+    border-radius: 1rem;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 50%;
+    align-self: center;
+}
+
+.review-button:hover{
+    background-color: #e19200;
+    font-weight: 700;
+}
+
+.review-label{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
 }

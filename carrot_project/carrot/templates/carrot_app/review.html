@@ -23,7 +23,7 @@
         <div class="login-container">
           <form method="post" class="review-form">
             {% csrf_token %}
-            <label for="content">리뷰</label>
+            <label for="content" class='review-label'>리뷰</label>
             <textarea name="content" id="id_content" cols="30" rows="10" required></textarea>
             <fieldset class="rate">
                 <input type="radio" id="score10" name="score" value="100"><label for="score10" title="100"></label>
