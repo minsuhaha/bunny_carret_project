@@ -1,0 +1,51 @@
+{% load custom_filter%}
+{% load static%}{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css'%}"/>
+    <link rel="stylesheet" href="{% static "css/review.css" %}">
+</head>
+<body>
+    
+  <header>{% include "carrot_app/nav.html" %}</header>
+
+  <main>
+    {% block content %}
+        <div class="login-container">
+          <form method="post" class="review-form">
+            {% csrf_token %}
+            <label for="content" class='review-label'>리뷰</label>
+            <textarea name="content" id="id_content" cols="30" rows="10" required></textarea>
+            <fieldset class="rate">
+                <input type="radio" id="score10" name="score" value="100"><label for="score10" title="100"></label>
+                <input type="radio" id="score9" name="score" value="90"><label class="half" for="score9" title="90"></label>
+                <input type="radio" id="score8" name="score" value="80"><label for="score8" title="80"></label>
+                <input type="radio" id="score7" name="score" value="70"><label class="half" for="score7" title="70"></label>
+                <input type="radio" id="score6" name="score" value="60"><label for="score6" title="60"></label>
+                <input type="radio" id="score5" name="score" value="50"><label class="half" for="score5" title="50"></label>
+                <input type="radio" id="score4" name="score" value="40"><label for="score4" title="40"></label>
+                <input type="radio" id="score3" name="score" value="30"><label class="half" for="score3" title="30"></label>
+                <input type="radio" id="score2" name="score" value="20"><label for="score2" title="20"></label>
+                <input type="radio" id="score1" name="score" value="10"><label class="half" for="score1" title="10"></label>
+            </fieldset>
+            <button type="submit" class="review-button">리뷰 작성</button>
+          </form>
+        </div>
+      {% endblock %}
+  </main>
+    
+
+
+
+      {% include "carrot_app/footer.html" %}
+</body>
+</html>

@@ -14,11 +14,21 @@ urlpatterns = [
     path('search/', views.search, name='search'), # 검색 url
     path('write/', views.write, name='write'), #write url
     path('edit/<int:id>/', views.edit, name='edit'), # edit url
+    path('delete/<int:id>/', views.delete_post, name='delete_post'), # edit url
     path('create_form/', views.create_post, name='create_form'),
     path('alert/<str:alert_message>/', views.alert, name='alert'),
+
+    #review
+    path('review/', views.review, name='review'),
 
     # location
     path('location/', views.location, name='location'),
     path('set_region/', views.set_region, name='set_region'),
     path('set_region_certification/', set_region_certification, name='set_region_certification'),
+
+    # chat
+    path('chat/', views.chatroom_list, name='chatroom'),
+    path('chat/<int:chatroom_id>/', views.chatroom, name='chatroom_ws'),
+    path('open_or_create_chatroom/', views.open_or_create_chatroom, name='open_or_create_chatroom'),
+    path('confirm_deal/<int:post_id>/', views.ConfirmDealView.as_view(), name='confirm_deal'),
 ]

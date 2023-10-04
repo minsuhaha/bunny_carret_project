@@ -56,3 +56,36 @@ class Product(models.Model):
 
 
 
+# 채팅 관련 모델
+class ChatRoom(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='chatroom_product')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chatroom_seller')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chatroom_buyer')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'ChatRoom for Product: {self.product}, Seller: {self.seller.username}'
+
+class Message(models.Model):
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='message_chatroom')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_receiver')
+    content = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False) # 메세지를 읽었는지 안읽었는지 표시
+
+    def __str__(self):
+        return f"Message from {self.sender.username}: {self.content}"
+    
+class Review(models.Model):
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='review_product' ) # 상품
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer' ) # 판매자 
+    reviewee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewee' ) # 구매자
+    reviewtype = models.IntegerField() # 리뷰의 주체, 0 = 판매자, 1 = 구매자
+    content = models.TextField() # 리뷰 내용
+    created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
+    score = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.seller.username}'
