@@ -42,4 +42,4 @@ class PostForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
 
     model = Review, Manner
-    fields = ['content', 'score']
+    fields = [ 'content', 'score' ]
