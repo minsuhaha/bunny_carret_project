@@ -85,6 +85,7 @@ class Review(models.Model):
     reviewtype = models.IntegerField() # 리뷰의 주체, 0 = 판매자, 1 = 구매자
     content = models.TextField() # 리뷰 내용
     created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
+    score = models.IntegerField()
 
     def __str__(self):
         return f'{self.seller.username}'

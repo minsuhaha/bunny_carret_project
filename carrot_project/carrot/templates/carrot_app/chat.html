@@ -28,10 +28,10 @@
               <div class="id-box flex-box between">
                 아이디
                 <div>
-                  <label>
+                  {% comment %} <label>
                     안읽은 메세지만 보기
                     <input type="checkbox" name="" id="">
-                  </label>
+                  </label> {% endcomment %}
                 </div>
               </div>
             </div>
@@ -92,7 +92,23 @@
                     <p class="bold">{{ product.price }}</p>
                   </div>
                 </div>
-                <button>{{ product.product_reserved }}</button>
+                {% if user.id == product.seller.id %}
+                  {% if product.product_sold == 'N' %}
+                    <form method="post" action="{% url 'confirm_deal' product.id %}">
+                      {% csrf_token %}
+                          <button type="submit">거래확정하기</button>
+                    </form>
+                  {% else %}
+                    <button type="button">거래완료</button>
+                    {% endif %}
+
+                {% else %}
+                  {% if product.product_sold == 'N' %}
+                    <button type="button">거래진행중</button>
+                  {% else %}
+                  <button type="button">거래완료</button>
+                  {% endif %}
+                {% endif %}
               </div>
 
               <!--채팅창 메인-->

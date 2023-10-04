@@ -10,6 +10,8 @@ from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.urls import reverse
+from django.views import View
+from django.utils.decorators import method_decorator
 
 # 메인 화면
 def main(request):
@@ -349,21 +351,44 @@ def open_or_create_chatroom(request):
 
             return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
 
+@method_decorator(login_required, name='dispatch')
+class ConfirmDealView(View):
+    def post(self, request, post_id):
+        product = get_object_or_404(Product, pk=post_id)
+        user = request.user
+
+        previous_url = request.META.get('HTTP_REFERER')
+        url_parts = previous_url.split('/')
+        original_post_id = url_parts[-2] if url_parts[-1] == '' else url_parts[-1]
+
+        chat_room = get_object_or_404(ChatRoom, pk=original_post_id)
+
     
+        # if chat_room.seller == user:
+        #     other_user = chat_room.buyer
+        # else:
+        #     other_user = chat_room.seller
+
+        if chat_room is None:
+            messages.error(request, 'Chat room does not exist.')
+            return redirect('trade')
+        
+        # buyer를 설정하고, product_sold를 Y로 설정
+        # product.buyer = chat_room.buyer if chat_room.seller == product.seller else chat_room.seller
+        product.product_sold = 'Y'
+        product.save()
+        
+        # 거래가 확정되면 새로고침
+        return redirect('chatroom_ws', chatroom_id=chat_room.id)
     
 
 
 def review (request):
-    
-    
     if request.method == 'POST':
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
-            post = form.save()
-            post.content = request.post["content"]
-            post.score = request.post["score"]
-            post.save()  # 최종 저장
-            return redirect('trade_post', pk=post.pk)  # 저장 후 상세 페이지로 이동
+            form.save()  # 저장
+            return redirect('main')  # 저장 후 메인 페이지로 이동
     else:
         form = ReviewForm()
 

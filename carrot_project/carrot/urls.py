@@ -30,4 +30,5 @@ urlpatterns = [
     path('chat/', views.chatroom_list, name='chatroom'),
     path('chat/<int:chatroom_id>/', views.chatroom, name='chatroom_ws'),
     path('open_or_create_chatroom/', views.open_or_create_chatroom, name='open_or_create_chatroom'),
+    path('confirm_deal/<int:post_id>/', views.ConfirmDealView.as_view(), name='confirm_deal'),
 ]
