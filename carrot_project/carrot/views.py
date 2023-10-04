@@ -200,34 +200,36 @@ def location(request):
 def set_region(request):
     if request.method == 'POST':
         region = request.POST.get('region-setting')
-
-        context = {
-            'region': region,
-        }
         
+        area = { "region" : region }
+
         if region:
             try:
-                user_profile = UserProfile.objects.get_or_create(user=request.user)
-                user_profile.region = region
-                user_profile.save()
-                return redirect('location')
-            except Exception as e:
-                return JsonResponse({ "status": "error", "message": str(e)})
-        else:
-            return JsonResponse({ "status": "error", "message": "지역 칸이 비어있습니다!"})
-    else:
-        return JsonResponse({ "status": "error", "message": "양식이 올바르지 않습니다!"}, status=405)
+                user_profile = UserProfile.objects.get(user=request.user)
+            except UserProfile.DoesNotExist:
+                user_profile = UserProfile(user=request.user)
+            
+            user_profile.region = region
+            user_profile.save()
 
+        return render(request, 'carrot_app/location.html', area)
+    return render(request, 'carrot_app/location.html')
+            
 @login_required
 def set_region_certification(request):
     if request.method == "POST":
-        request.user.profile.region_certification = 'Y'
-        request.user.profile.save()
-        messages.success(request, "확인되었습니다!")
-        return redirect('location')
+        try:
+            certification = UserProfile.objects.get(user=request.user)
+            certification.region_certification = 'Y'
+            certification.save()
+            messages.success(request, "인증되었습니다")
+        except UserProfile.DoesNotExist:
+            certification = UserProfile(user=request.user, region_certification='Y')
+            certification.save()
+
+    return render(request, 'carrot_app/main.html')
     
 # chat
-
 def get_chatrooms_context(user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
     chatrooms = ChatRoom.objects.filter(Q(seller_id=user.id) | Q(buyer_id=user.id))
