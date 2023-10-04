@@ -16,13 +16,13 @@
 </head>
 <body class="back-ye">
   <header>{% include "carrot_app/nav.html" %}</header>
-  {% if messages %}
+  {% comment %} {% if messages %}
     <div class="messages">
       {% for message in messages %}
         <div {%if message.tags%} class="{{ message.tags}}" {% endif %}>{{ message }}</div>
       {% endfor %}
     </div>
-  {% endif %}
+  {% endif %} {% endcomment %}
 
   {% include "carrot_app/nav.html" %}
   <div class="content-box">
