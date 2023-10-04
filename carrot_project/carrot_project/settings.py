@@ -99,11 +99,11 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'carrot_project', # 데이터베이스 이름
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': secrets["postgresql_name"], # 데이터베이스 이름
+        'USER': secrets["postgresql_user"],
+        'PASSWORD': secrets["postgresql_pwd"],
+        'HOST': secrets["postgresql_host"],
+        'PORT': secrets["postgresql_port"],
     }
 }
 
