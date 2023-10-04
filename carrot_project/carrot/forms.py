@@ -41,5 +41,6 @@ class PostForm(forms.ModelForm):
 
 class ReviewForm(forms.ModelForm):
 
-    model = Review, Manner
-    fields = [ 'content', 'score' ]
+    class Meta:
+        model = Review
+        fields = [ 'content', 'score' ]
