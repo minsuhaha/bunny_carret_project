@@ -44,115 +44,116 @@
       <div id="map" style="width:100%; height:468px; margin-top:44px;"></div>
       <h5 id="region-info">현재 위치</h5>
       <h5 id="region-judge"></h5>
-      <form id="region-save-button" action="/set_region_certification/" class="full-box">
+      <form id="region-certification-form" action="/set_region_certification/" class="full-box">
         {% csrf_token %}
         <button id="region-save-button" class="primary-button">동네인증하기</button>
       </form>
     </div>
   </div>
   <footer>{% include "carrot_app/footer.html" %}</footer>
-</body>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=20408daa50c87fb6612c5ebb4c9149d7"></script>
-<script>
-  var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
+    <!--카카오 api key-->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06b71a5db40aca812f7ae8bff82d58b9&libraries=services"></script>
+    <script>
+      //지도 현재위치로 보여주기
+      let mapContainer = document.getElementById("map"),
+      mapOption = {
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
-  
-  var map = new kakao.maps.Map(mapContainer, mapOption);
+        level: 6, // 지도의 확대 레벨
+      };
 
-  // HTML5의 geolocation으로 사용할 수 있는지 확인작업
-  if(navigator.gelocation) {
-    // GeoLocation을 이용해서 접속 위치 정보 얻기
-    navigator.gelocation.getCurrentPosition(function(position) {
-      var lat = position.coords.latitude,   //위도
-          lon = position.coords.longitude;  //경도
+      let map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+      // HTML5의 geolocation으로 사용할 수 있는지 확인
+if (navigator.geolocation) {
+  // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+  navigator.geolocation.getCurrentPosition(function (position) {
+    let lat = position.coords.latitude; // 위도
+    let lon = position.coords.longitude; // 경도
 
-      // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성
-      var locationPosition = new kakao.maps.LatLng(lat, lon); 
-          // 인포윈도우에 표시될 내용
-          message = '<div style="padding:5px;">현재위치</div>';
-      
-      displayMarker(locationPosition, message);
+    let locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+      message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용입니다
 
-      //주소-좌표 변환 객체를 생성
-      var geocoder = new kakao.maps.services.Geocoder();
+    // 마커와 인포윈도우를 표시합니다
+    displayMarker(locPosition, message);
+    let geocoder = new kakao.maps.services.Geocoder();
 
-      //주소로 좌표 검색
-      var address = document.getElementById('input[name="region-setting"]').value;
-      console.log(address);
+    function GetAddr(lat, lon) {
+      let geocoder = new kakao.maps.services.Geocoder();
 
-      geocoder.addressSearch(address, function(result, status) {
-        //정상작동
+      let coord = new kakao.maps.LatLng(lat, lon);
+      let callback = function (result, status) {
         if (status === kakao.maps.services.Status.OK) {
-          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          // 결과값으로 받은 위치를 마커로 표시
-          var marker = new kakao.maps.Marker({
-            map: map,
-            position : coords
-          });
+          console.log(result);
+          let currentLocation = result[0].address.address_name;
 
-          //인포윈도우로 장소에 설명
-          var infowindow = new kakao.maps.InfoWindow({
-            content: address,
-          });
-          infowindow.open(map, marker);
+          document.getElementById("region-info").innerText =
+            "현재위치는 " + result[0].address.address_name + "입니다.";
 
-          //지도의 중심을 결과값으로 받은 위치로 이동
-          map.setCenter(coords);
+          let regionSettingValue = document.querySelector(
+            'input[name="region-setting"]'
+          ).value;
+          let regionArray = regionSettingValue.split(" ");
+          let lastRegionPart = regionArray[regionArray.length - 1];
+
+          let currentLocationArray = currentLocation.split(" ");
+          let regionJudgeText = document.getElementById("region-judge");
+
+          if (currentLocationArray.includes(lastRegionPart)) {
+            regionJudgeText.innerText = "현재 위치가 내 동네 설정과 같습니다.";
+          } else {
+            regionJudgeText.innerText = "현재 위치가 내 동네 설정과 다릅니다.";
+            regionSaveButton.classList.toggle("button-disabled");
+          }
         }
-      });
-    });
-  } else {
-    //사용할 수 없을 때 마커 표시 위치와 인포 윈도우 내용 설정
-    var locationPosition = new kakao.maps.LatLng(33.450701, 126.570667),
-        message = 'geolocation을 사용할 수 없습니다.'
-
-    displayMarker(locationPosition, message);
-  }
-
-  //지도에 마커와 인포윈도우를 표시하는 함수
-  function displayMarker(locationPosition, message) {
-    //마커생성
-    var marker = new kakao.maps.Marker({
-      map: map,
-      position: locationPosition
-    })
-
-    //인포윈도우에 표시할 내용
-    var iwContent = message,
-        iwRemoveable = true;
-
-    var infowindow = new kakao.maps.InfoWindow({
-      content : iwContent,
-      removable : iwRemoveable
-    });
-
-    infowindow.open(map, marker);
-
-    map.setCenter(locationPosition);
-  }
-
-  //버튼 이벤트 리스너
-  let regionSaveButton = document.getElementById("region-save-button");
-
-  document.getElementById("region-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-  
-    let region = document.querySelector('input[name="region-setting"]').value;
-  
-    if (region.trim()) {
-      this.submit();
-    } else {
-      alert("지역을 입력해주세요");
+      };
+      geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
     }
+    GetAddr(lat, lon);
   });
-  regionSaveButton.addEventListener("click", function () {
-    alert("인증이 완료되었습니다");
-  });
-</script>
+} else {
+  // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
 
-{% comment %} <script type="text/javascript" src="{% static 'js/location.js' %}"></script> {% endcomment %}
+  let locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+    message = "사용자 환경문제로 위치정보를 사용할 수 없습니다";
+
+  displayMarker(locPosition, message);
+}
+
+// 지도에 마커와 인포윈도우를 표시하는 함수
+function displayMarker(locPosition, message) {
+  // 마커 생성
+  let marker = new kakao.maps.Marker({ map: map, position: locPosition });
+
+  let iwContent = message, // 인포윈도우에 표시할 내용
+    iwRemoveable = true;
+
+  // 인포윈도우를 생성
+  let infowindow = new kakao.maps.InfoWindow({
+    content: iwContent,
+    removable: iwRemoveable,
+  });
+
+  // 인포윈도우를 마커위에 표시
+  infowindow.open(map, marker);
+
+  // 지도 중심좌표를 접속위치로 변경
+  map.setCenter(locPosition);
+}
+
+document.getElementById("region-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  let region = document.querySelector('input[name="region-setting"]').value;
+
+  if (region.trim()) {
+    this.submit();
+  } else {
+    alert("지역을 입력해주세요");
+  }
+});
+regionSaveButton.addEventListener("click", function () {
+  alert("인증이 완료되었습니다");
+});
+    </script>
+  </body>
 </html>
