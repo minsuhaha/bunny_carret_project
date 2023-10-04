@@ -1,6 +1,7 @@
+import json
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import Product, UserProfile, UserProfile, Category
+from .models import ChatRoom, Message, Product, UserProfile, UserProfile, Category
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -8,6 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomLoginForm, CustomRegistrationForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.urls import reverse
 
 # 메인 화면
 def main(request):
@@ -175,6 +177,12 @@ def create_post(request):
         form = PostForm()
     return render(request, 'carrot_app/trade_post.html', {'form': form})
 
+# 게시글 삭제 기능
+@login_required
+def delete_post(request, id):
+    product = get_object_or_404(Product, id=id)
+    product.delete()
+    return redirect('trade')
 
 #location Part
 @login_required
@@ -213,3 +221,132 @@ def set_region_certification(request):
         request.user.profile.save()
         messages.success(request, "확인되었습니다!")
         return redirect('location')
+    
+# chat
+
+def get_chatrooms_context(user):
+    # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
+    chatrooms = ChatRoom.objects.filter(Q(seller_id=user.id) | Q(buyer_id=user.id))
+
+    # 최종적으로 넘겨줄 결과 chatroom 리스트 초기화
+    chatrooms_context = []
+
+    # 각 chatroom에 대해 필요한 정보 가져옴
+    for chatroom in chatrooms:
+        # 채팅 상대 정보
+        if chatroom.seller == user:
+            chat_partner = User.objects.get(id=chatroom.buyer_id)
+        else:
+            chat_partner = User.objects.get(id=chatroom.seller_id)
+
+        # 상품
+        product = Product.objects.get(id=chatroom.product_id)
+
+        # 마지막 주고 받은 메시지
+        last_message = Message.objects.filter(chatroom_id=chatroom.id).order_by("-sent_at").first()
+
+        result = {
+          
+            'chatroom' : chatroom, # 채팅방 정보
+            'chat_partner' : chat_partner, # 채팅 상대방의 정보
+            'product' : product, # 상품 정보
+            'message' : last_message # 마지막 메시지 정보
+
+        }
+
+        chatrooms_context.append(result)
+    
+    return chatrooms_context
+
+
+@login_required
+def chatroom_list(request):
+    user = request.user
+    
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
+    
+    return render(request, 'carrot_app/chat.html', {'chatrooms' : chatrooms_context})
+
+@login_required
+def chatroom(request, chatroom_id):
+    user = request.user
+
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
+    
+    # 클릭한 채팅방 및 채팅 상대방에 대한 정보
+    selected_chatroom = ChatRoom.objects.get(id=chatroom_id)
+    if selected_chatroom.seller == user:
+        chat_partner = User.objects.get(id=selected_chatroom.buyer_id)
+    else:
+        chat_partner = User.objects.get(id=selected_chatroom.seller_id)
+
+    # 어떤 상품에 대한 채팅방인지
+    product = Product.objects.get(id=selected_chatroom.product_id)
+
+    # 주고받은 채팅(메시지) 기록
+    messages = Message.objects.filter(chatroom=chatroom_id).order_by('sent_at')
+
+    # WebSocket 연결을 위한 주소
+    ws_path = f"/ws/chat/{selected_chatroom.id}"
+
+    # 템플릿에 전달할 데이터 정의
+    context = {
+        'chatrooms' : chatrooms_context,
+        "selected_chatroom" : selected_chatroom,
+        "product" : product,
+        "chat_partner" : chat_partner,
+        "messages" : messages,
+        "ws_path" : ws_path,
+    }
+
+    return render(request, "carrot_app/chat.html", context)
+
+@login_required
+def open_or_create_chatroom(request):
+    if request.method == 'POST':
+        # POST 요청에서 물건, 구매자 및 판매자 정보 가져오기
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
+        buyer_id = data.get('buyer_id')
+        seller_id = data.get('seller_id')
+        
+        # buyer와 seller가 같은 경우 (채팅방 생성되지 않도록)
+        if seller_id == buyer_id: # 요청하는 유저가 seller이자 buyer일 경우 (즉 채팅보기를 눌렀을때)
+            existing_chatroom = ChatRoom.objects.filter(product_id = product_id).first() # 맨 처음에 채팅 한 방으로 이동시키기
+
+            if existing_chatroom:
+                # 이미 존재하는 채팅방의 URL 반환
+                chatroom_url = reverse('chatroom_ws', args=[existing_chatroom.id])
+                return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
+            
+            # seller와 buyer가 같은 사람일때 해당 물건에 대한 채팅방이 아직 존재하지않는다면 alert 창 띄워주기
+            return JsonResponse({'success':False})
+            
+        # buyer와 seller가 다른 경우
+        else:
+            # 이미 존재하는 채팅방인지 확인
+            existing_chatroom = ChatRoom.objects.filter(
+                product_id=product_id,
+                seller_id=seller_id,
+                buyer_id=buyer_id
+            ).first()
+
+            if existing_chatroom:
+                # 이미 존재하는 채팅방의 URL 반환
+                chatroom_url = reverse('chatroom_ws', args=[existing_chatroom.id])
+                return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
+            
+        
+            # 존재하지 않는 경우, 새로운 채팅방 생성
+            product = Product.objects.get(id=product_id)
+            seller = User.objects.get(id=seller_id)
+            buyer = User.objects.get(id=buyer_id)
+            
+            new_chatroom = ChatRoom.objects.create(product=product, seller=seller, buyer=buyer)
+            chatroom_url = reverse('chatroom_ws', args=[new_chatroom.id])
+
+            return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
+
+    
