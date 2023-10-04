@@ -10,6 +10,20 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/write.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <style>
+      select {
+        width: 200px;
+        padding: .8em 1em;
+        border: 1px solid #999;
+        border: none;
+        font-size: 16px;
+        -webkit-appearance: none;
+        -moz-appearance: none;    
+        appearance: none;
+        background: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99761B495C84AA8716') no-repeat 95% 50%;
+        background-color: #f3f3f3;
+      }
+    </style>
   </head>
 
   <body>
@@ -39,7 +53,7 @@
                           <option value="2" {% if post and post.category_id == 2 %}selected{% endif %}>가구</option>
                           <option value="3" {% if post and post.category_id == 3 %}selected{% endif %}>디지털기기</option>
                           <option value="4" {% if post and post.category_id == 4 %}selected{% endif %}>기타</option>
-                      </select>
+                        </select>
                     </div>
                   </div>
                 </div>

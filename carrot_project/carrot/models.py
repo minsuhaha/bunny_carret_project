@@ -78,6 +78,7 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.sender.username}: {self.content}"
+    
 class Review(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='review_product' ) # 상품
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer' ) # 판매자 
