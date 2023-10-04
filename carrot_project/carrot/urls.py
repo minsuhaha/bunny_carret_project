@@ -33,4 +33,8 @@ urlpatterns = [
     path('confirm_deal/<int:post_id>/', views.ConfirmDealView.as_view(), name='confirm_deal'),
     path('chatbot', views.chatbot_api, name='chatbot_api'),
     path('chat/chatbot', views.chatbot, name='chatbot')
+
+    #mypage
+    path('mypage/', views.mypage, name='mypage'),
+
 ]

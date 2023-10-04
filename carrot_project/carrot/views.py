@@ -456,4 +456,8 @@ def review (request):
 
     return render(request, 'carrot_app/review.html', {'form': form})
 
-    
+
+#마이페이지
+
+def mypage(request):
+    return render(request, 'carrot_app/mypage.html')
