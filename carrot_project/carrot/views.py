@@ -177,6 +177,12 @@ def create_post(request):
         form = PostForm()
     return render(request, 'carrot_app/trade_post.html', {'form': form})
 
+# 게시글 삭제 기능
+@login_required
+def delete_post(request, id):
+    product = get_object_or_404(Product, id=id)
+    product.delete()
+    return redirect('trade')
 
 #location Part
 @login_required

@@ -31,6 +31,9 @@
                 <a href="{% url 'edit' post.id %}">
                   <button class="grey">수정하기</button>
                 </a>
+                <a href="{% url 'delete_post' post.id %}" onclick="return confirmDelete();"> <!-- 삭제하기 버튼 링크 추가 -->
+                  <button class="grey" data-post-id="{{ post.id }}">삭제하기</button>
+                </a>
                 <button class="orange" onclick="openChatroom()">채팅보기</button>
               </div>
               {% else %}
@@ -102,7 +105,15 @@
         console.error('채팅방 열기 오류:', error);
       });
     }
+
+
+    // 게시글 삭제 알람창
+    function confirmDelete() {
+      return confirm("정말 삭제하시겠습니까?");
+  }
   </script>
 
+  
+    
   
 </html>
