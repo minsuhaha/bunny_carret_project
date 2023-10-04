@@ -353,13 +353,7 @@ def open_or_create_chatroom(request):
 
             return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
 
-    
-    
-
-
 def review (request):
-    
-    
     if request.method == 'POST':
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
@@ -372,3 +366,9 @@ def review (request):
         form = ReviewForm()
 
     return render(request, 'carrot_app/review.html', {'form': form})
+
+
+#마이페이지
+
+def mypage(request):
+    return render(request, 'carrot_app/mypage.html')
