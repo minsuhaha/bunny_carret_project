@@ -1,15 +1,15 @@
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-.rate { display: inline-block;border: 0;margin-right: 15px; align-self: center; margin: 2rem;}
-.rate > input {display: none;}
-.rate > label {float: right;color: #ddd}
-.rate > label:before {display: inline-block;font-size: 4rem;padding: .3rem .2rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
-.rate .half:before {content: "\f089 "; position: absolute;padding-right: 0;}
-.rate input:checked ~ label, 
-.rate label:hover,.rate label:hover ~ label { color: orange !important;  } 
-.rate input:checked + .rate label:hover,
-.rate input input:checked ~ label:hover,
-.rate input:checked ~ .rate label:hover ~ label,  
-.rate label:hover ~ input:checked ~ label { color: orange !important;  }
+.score { display: inline-block;border: 0;margin-right: 15px; align-self: center; margin: 2rem;}
+.score > input {display: none;}
+.score > label {float: right;color: #ddd}
+.score > label:before {display: inline-block;font-size: 4rem;padding: .3rem .2rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
+.score .half:before {content: "\f089 "; position: absolute;padding-right: 0;}
+.score input:checked ~ label, 
+.score label:hover,.score label:hover ~ label { color: #e75c11 !important;  } 
+.score input:checked + .score label:hover,
+.score input input:checked ~ label:hover,
+.score input:checked ~ .score label:hover ~ label,
+.score label:hover ~ input:checked ~ label { color: #e75c11 !important;  }
 
 
 html{
