@@ -43,4 +43,4 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = [ 'content', 'score' ]
+        fields = [ 'content', 'score', 'reviewer', 'reviewee', 'product_id' ]

@@ -457,12 +457,17 @@ class ConfirmDealView(View):
     
 
 
-def review (request):
+def review (request, id, p_id):
     if request.method == 'POST':
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
+            form.reviewee = request.user
+            form.reviewer = id
+            form.product_id = p_id
             form.save()  # 저장
             return redirect('main')  # 저장 후 메인 페이지로 이동
+        else:
+            return redirect('chatroom')
     else:
         form = ReviewForm()
 

@@ -149,7 +149,7 @@
                           {# 물건이 팔린 경우, 리뷰 작성 페이지로 이동할 수 있는 링크 메시지 추가 #}
                         <div class="message-box from-you">
                           <div class="message-text">
-                            <p>물건 거래가 완료되었습니다. 리뷰 작성을 원하신다면 <a href="{% url 'review' %}"> "여기를 클릭하세요" </a></p>
+                            <p>물건 거래가 완료되었습니다. 리뷰 작성을 원하신다면 <a href="{% url 'review' product.seller.id product.id %}"> "여기를 클릭하세요" </a></p>
                           </div>
                         </div>
                 {% endif %}
