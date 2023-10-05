@@ -24,7 +24,7 @@
         <div class="login-container" >
           <form method="post" class="review-form">
             {% csrf_token %}
-            <div style=''>
+            <div style='display:none'>
               <label for="reviewer">리뷰하는사람</label>
               <input type="text" name='reviewer' value='{{seller.id}}'>
               
