@@ -90,6 +90,7 @@ def trade(request):
     page_obj = page.get_page(page_number)
 
     if page_number=='all':
+        top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:40]
         page = Paginator(top_products, 40)
         return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': top_products})
     
@@ -457,21 +458,24 @@ class ConfirmDealView(View):
     
 
 
-def review (request, id, p_id):
+def review(request, id, p_id):
+    
+    product = Product.objects.get(id=p_id)
+    seller = User.objects.get(id=id)
+    buyer = User.objects.get(id= request.user.id)
+
     if request.method == 'POST':
+
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
-            form.reviewee = request.user
-            form.reviewer = id
-            form.product_id = p_id
             form.save()  # 저장
             return redirect('main')  # 저장 후 메인 페이지로 이동
         else:
-            return redirect('chatroom')
+            return redirect('alert', alert_message='저장 왜 안됨')
     else:
         form = ReviewForm()
 
-    return render(request, 'carrot_app/review.html', {'form': form})
+    return render(request, 'carrot_app/review.html', {'form': form, 'product': product, 'seller': seller, 'buyer': buyer})
 
 
 # 마이페이지
