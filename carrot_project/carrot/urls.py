@@ -35,5 +35,5 @@ urlpatterns = [
     path('chat/chatbot', views.chatbot, name='chatbot'),
 
     #mypage
-    path('mypage/', views.mypage, name='mypage'),
+    path('mypage/<int:user_id>', views.mypage, name='mypage'),
 ]
