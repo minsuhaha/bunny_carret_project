@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import ChatRoom, ChatbotMessage, ChatbotRoom, Message, Product, UserProfile, UserProfile, Category
+from .models import ChatRoom, ChatbotMessage, ChatbotRoom, Message, Product, Review, UserProfile, UserProfile, Category
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -457,7 +457,14 @@ def review (request):
     return render(request, 'carrot_app/review.html', {'form': form})
 
 
-#마이페이지
+# 마이페이지
+def mypage(request, user_id):
+    user = request.user
+    sold_products = Product.objects.filter(seller=user, product_sold='Y').order_by('-created_at')
+    proceed_products = Product.objects.filter(seller=user, product_sold='N').order_by('-created_at')
+    reviews = Review.objects.filter(reviewer=user).order_by('-created_at')
+    
+    context = {'user' : user, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
+    return render(request, 'carrot_app/mypage2.html', context)
 
-def mypage(request):
-    return render(request, 'carrot_app/mypage.html')
+

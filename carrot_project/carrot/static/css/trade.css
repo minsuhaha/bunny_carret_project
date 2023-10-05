@@ -139,6 +139,11 @@ h1{
   width: 100%;
 }
 
+.card-info-box h5,
+.card-info-box p {
+    margin: 2px 0; /* 위아래 margin을 1px로 조정 */
+}
+
 
   .floating-button {
     position: fixed;
