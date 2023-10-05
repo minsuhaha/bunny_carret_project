@@ -34,7 +34,7 @@
   {% comment %} </div> {% endcomment %}
 
     <div class="post-box">
-      <div class="container column center">
+      <div class="container column center" id='popular'>
         <h1>중고거래 인기매물</h1>
       </div>
       <div class="container column center">
@@ -83,6 +83,9 @@
                 </a>
             {% endif %}
               </div>
+              {% if forloop.counter == 4 %}
+                <div id="sec8"></div>
+              {% endif %}
             {% endfor %}
 
             
@@ -92,7 +95,7 @@
       </div>
       {% if page_obj.has_next %}
       <div class="link-container">
-        <a class='more-link' href="?page=all" >더보기</a>
+        <a class='more-link' href="?page=all#sec8" >더보기</a>
       </div>
       {% endif %}
     </div>
