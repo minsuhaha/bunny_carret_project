@@ -216,28 +216,21 @@
                             </div>
                 `
                 msg_you.innerHTML += rep_msg
-                // let iframe = document.getElementById('id_content_iframe');
-                // var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-                // let notesd = iframeDocument.querySelector('.note-editable');
-    
-                // notesd.innerHTML += data.message
-                // iframe.innerHTML += data.message
-                
+                scrollToBottom(); // 메시지를 받은 후 스크롤을 가장 아래로 이동
             })
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('loading-animation').style.display = 'none';
             });
         
-        // 스크롤을 가장 아래로 이동
-        scrollToBottom();
+        scrollToBottom(); // 메시지를 받은 후 스크롤을 가장 아래로 이동
     });
     
     const messageTextarea = document.getElementById('message-textarea');
     
     // Enter 키로 채팅 전송
-    messageTextarea.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) { // Enter 키를 눌렀고 Shift 키가 눌리지 않았을 때
+    messageTextarea.addEventListener('keypress', (event) => {
+        if (event.keyCode === 13) {
             event.preventDefault(); // Enter 키의 기본 동작(새 줄 입력) 막기
             document.getElementById('sendButton').click(); // 전송 버튼을 클릭하도록 시뮬레이트
         }
