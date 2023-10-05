@@ -1,4 +1,5 @@
-{% load static %}
+{% load custom_filter%}
+{% load static %}{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,10 +24,43 @@
             <p id="my1">내 매너 : </p>
             <p id="my2">내 리뷰 :</p>
             <p id="my3">내 거래 :</p>
-        </div>
-        
-    </div>
 
+        </div>
+    </div>
+    <div class="post-box">
+        <div class="container column center">
+          <h3>내 거래</h1>
+        </div>
+        <div class="container column center">
+          <div class="full-box trade-box column">
+            <div class="flex-box full-box card-container between">
+              {% for post in posts %}
+                <div class="card-box">
+                  <!--로그인 된 유저라면-->   
+                  <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
+                      <div class="card-img">
+                          {% if post.images %}
+                              <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                          {% endif %}
+                      </div>
+                      <div class="card-info-box">
+                          <h5>{{ post.title }}</h5>
+                          <p class="bold">{{ post.price | intcomma }}원</p>
+                          <p>{{ post.region }}</p>
+                          <div class="flex-box">
+                              <p>조회 {{ post.view_cnt }}</p>
+                              <p>·</p>
+                              <p>채팅 {{ post.chat_cnt }}</p>
+                          </div>
+                      </div>
+                  </a>
+                </div>
+              {% endfor %}
+    
+            </div>
+          </div>
+        </div>
+      </div>
     {% include "carrot_app/footer.html" %}
 </body>
 </html>
