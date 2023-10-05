@@ -1,0 +1,150 @@
+{% load custom_filter%}
+{% load static %}{% load humanize %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mypage2.css'%}"/>
+    <title>프로필 페이지</title>
+</head>
+<body>
+    {% include "carrot_app/nav.html" %}
+    <div id="gnb-root">
+        <!-- 네비게이션 메뉴 코드 (생략) -->
+    </div>
+    <section id="content">
+        <section id="user-profile">
+            <h2 id="username">
+                {{user.username}}
+                <span id="region_name">
+                    {{user.profile.region}}    
+                </span>
+            </h2>
+            <ul id="profile-detail">
+                <li class="profile-detail-title">매너온도 <span class="profile-detail-count">37.4°C</span></li>
+                <li class="profile-detail-title">재거래희망률 <span class="profile-detail-count">표시될 만큼 충분히 거래하지 않았어요.</span></li>
+            </ul>
+            <div id="profile-image">
+                <img alt="동동히" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-c649f052a34ebc4eee35048815d8e4f73061bf74552558bb70e07133f25524f9.png" />
+            </div>
+        </section>
+        <div id="user-records-detail">
+            <section id="user-filter">
+                <ul>
+                    <li><a class="active" href="#proceed-products-tab">판매중 물품</a></li>
+                    <li><a class="" href="#products-tab">판매완료 물품</a></li>
+                    <li><a class="" href="#reviews-tab">거래후기</a></li>
+                </ul>
+            </section>
+            <!-- 판매 물품, , 판매중인 물품, 거래 후기 내용을 표시하는 코드 -->
+            <div id="products-tab">
+                <div class="container column center">
+                  <div class="full-box trade-box column">
+                    <div class="flex-box full-box card-container between">
+                      {% for product in sold_products %}
+                        <div class="card-box">
+                          <a href="{% url 'trade_post' product.id %}" class="trade-text-link">
+                              <div class="card-img">
+                                  {% if product.images %}
+                                      <img src="{{ product.images.url }}" alt="{{ product.title }}">
+                                  {% endif %}
+                              </div>
+                              <div class="card-info-box">
+                                  <h5>{{ product.title }}</h5>
+                                  <p class="bold">{{ product.price | intcomma }}원</p>
+                                  <p>{{ product.region }}</p>
+                                  <div class="flex-box">
+                                      <p>조회 {{ product.view_cnt }}</p>
+                                      <p>·</p>
+                                      <p>채팅 {{ product.chat_cnt }}</p>
+                                  </div>
+                              </div>
+                          </a>
+                        </div>
+                      {% endfor %}
+            
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              <div id="proceed-products-tab">
+                <div class="container column center">
+                  <div class="full-box trade-box column">
+                    <div class="flex-box full-box card-container between">
+                      {% for product in proceed_products %}
+                        <div class="card-box">
+                          <a href="{% url 'trade_post' product.id %}" class="trade-text-link">
+                              <div class="card-img">
+                                  {% if product.images %}
+                                      <img src="{{ product.images.url }}" alt="{{ product.title }}">
+                                  {% endif %}
+                              </div>
+                              <div class="card-info-box">
+                                  <h5>{{ product.title }}</h5>
+                                  <p class="bold">{{ product.price | intcomma }}원</p>
+                                  <p>{{ product.region }}</p>
+                                  <div class="flex-box">
+                                      <p>조회 {{ product.view_cnt }}</p>
+                                      <p>·</p>
+                                      <p>채팅 {{ product.chat_cnt }}</p>
+                                  </div>
+                              </div>
+                          </a>
+                        </div>
+                      {% endfor %}
+            
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="reviews-tab" style="display: none;">
+                <!-- 거래 후기 내용을 표시하는 코드 (생략) -->
+             </div>
+        </div>
+    </section>
+
+    {% include "carrot_app/footer.html" %}
+</body>
+<script>
+
+    // 판매중인 물품 탭을 클릭할 때
+    document.querySelector('a[href="#proceed-products-tab"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector('#products-tab').style.display = 'none';
+        document.querySelector('#proceed-products-tab').style.display = 'block';
+        document.querySelector('#reviews-tab').style.display = 'none';
+        document.querySelector('a[href="#products-tab"]').classList.remove('active');
+        document.querySelector('a[href="#proceed-products-tab"]').classList.add('active');
+        document.querySelector('a[href="#reviews-tab"]').classList.remove('active');
+    });
+
+    // 판매완료 물품 탭을 클릭할 때
+    document.querySelector('a[href="#products-tab"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector('#products-tab').style.display = 'block';
+        document.querySelector('#proceed-products-tab').style.display = 'none';
+        document.querySelector('#reviews-tab').style.display = 'none';
+        document.querySelector('a[href="#products-tab"]').classList.add('active');
+        document.querySelector('a[href="#proceed-products-tab"]').classList.remove('active');
+        document.querySelector('a[href="#reviews-tab"]').classList.remove('active');
+    });
+
+    // 거래 후기 탭을 클릭할 때
+    document.querySelector('a[href="#reviews-tab"]').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector('#products-tab').style.display = 'none';
+        document.querySelector('#proceed-products-tab').style.display = 'none';
+        document.querySelector('#reviews-tab').style.display = 'block';
+        document.querySelector('a[href="#products-tab"]').classList.remove('active');
+        document.querySelector('a[href="#proceed-products-tab"]').classList.remove('active');
+        document.querySelector('a[href="#reviews-tab"]').classList.add('active');
+    });
+</script>
+
+</html>

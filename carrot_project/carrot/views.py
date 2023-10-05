@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import ChatRoom, ChatbotMessage, ChatbotRoom, Message, Product, UserProfile, UserProfile, Category
+from .models import ChatRoom, ChatbotMessage, ChatbotRoom, Message, Product, Review, UserProfile, UserProfile, Category
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -14,6 +14,8 @@ from django.views import View
 from django.utils.decorators import method_decorator
 import openai
 from carrot_project.settings import secrets
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # 메인 화면
 def main(request):
@@ -81,7 +83,17 @@ def register(request):
 # 중고거래 화면
 def trade(request):
     top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
-    return render(request, 'carrot_app/trade.html', {'posts': top_products})
+
+    # 페이지네이터
+    page = Paginator(top_products, 8)
+    page_number = request.GET.get('page')
+    page_obj = page.get_page(page_number)
+
+    if page_number=='all':
+        page = Paginator(top_products, 40)
+        return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': top_products})
+    
+    return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': page_obj})
 
 # 중고거래 상세정보 화면
 def trade_post(request, pk):
@@ -457,7 +469,14 @@ def review (request):
     return render(request, 'carrot_app/review.html', {'form': form})
 
 
-#마이페이지
+# 마이페이지
+def mypage(request, user_id):
+    user = request.user
+    sold_products = Product.objects.filter(seller=user, product_sold='Y').order_by('-created_at')
+    proceed_products = Product.objects.filter(seller=user, product_sold='N').order_by('-created_at')
+    reviews = Review.objects.filter(reviewer=user).order_by('-created_at')
+    
+    context = {'user' : user, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
+    return render(request, 'carrot_app/mypage2.html', context)
 
-def mypage(request):
-    return render(request, 'carrot_app/mypage.html')
+
