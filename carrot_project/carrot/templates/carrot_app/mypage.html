@@ -35,7 +35,7 @@
           <div class="full-box trade-box column">
             <div class="flex-box full-box card-container between">
                 {% for post in posts %}
-                {% if post.author == user %}
+                {% if post.seller == user %}
                     <div class="card-box">
                         <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
                             <div class="card-img">
