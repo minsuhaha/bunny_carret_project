@@ -389,7 +389,6 @@ def chatbot_api(request):
         # 사용자가 보낸 메시지를 가져옴
         user_message = request.POST.get('title')
         user = request.user  # 현재 로그인한 사용자
-
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -437,7 +436,7 @@ class ConfirmDealView(View):
             return redirect('trade')
         
         # buyer를 설정하고, product_sold를 Y로 설정
-        # product.buyer = chat_room.buyer if chat_room.seller == product.seller else chat_room.seller
+        product.buyer = chat_room.buyer if chat_room.seller == product.seller else chat_room.seller
         product.product_sold = 'Y'
         product.save()
         
