@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="https://blog.kakaocdn.net/dn/S0wSJ/btqDogzoUNX/kZBkpKPGjdGKJSvKKs35D0/img.png">
     <title>채팅하기</title>
   </head>
 
@@ -39,7 +40,7 @@
             <!-- 채팅 리스트 -->
             <div class="chat-list-box flex-box column">
               <!-- 봇 -->
-              <div class="chat-box flex-box">
+              <div class="chat-box flex-box" style="cursor: pointer;" onclick='location.href="{% url 'chatbot' %}";'>
                 <div class="ai-profile">
                   <img src="{% static 'img/icon_aibot.png'%}" alt="">
                 </div>
@@ -108,29 +109,53 @@
                   {% else %}
                   <button type="button">거래완료</button>
                   {% endif %}
-                {% endif %}
+                {% endif%}
               </div>
 
               <!--채팅창 메인-->
               {% comment %} {% if messages %} {% endcomment %}
-              <div class="chat-container">
-                {% for message in messages %}
-                    {% if message.sender == user %}
-                        <div class="message-box from-me">
-                            <p class="s-text">{{ message.sent_at }}</p>
-                            <div class="message-text">{{ message.content }}</div>
-                        </div>
-                    {% else %}
+              {% if product.product_sold == 'N' %}
+                <div class="chat-container">
+                  {% for message in messages %}
+                      {% if message.sender == user %}
+                          <div class="message-box from-me">
+                              <p class="s-text">{{ message.sent_at }}</p>
+                              <div class="message-text">{{ message.content }}</div>
+                          </div>
+                      {% else %}
+                          <div class="message-box from-you">
+                              <div class="message-text">{{ message.content }}</div>
+                              <p class="s-text">{{ message.sent_at }}</p>
+                          </div>
+                      {% endif %}
+                  {% endfor %}
+                </div>
+
+                {% else %}
+                  <div class="chat-container">
+                    {% for message in messages %}
+                        {% if message.sender == user %}
+                            <div class="message-box from-me">
+                                <p class="s-text">{{ message.sent_at }}</p>
+                                <div class="message-text">{{ message.content }}</div>
+                            </div>
+                        {% else %}
+                            <div class="message-box from-you">
+                                <div class="message-text">{{ message.content }}</div>
+                                <p class="s-text">{{ message.sent_at }}</p>
+                            </div>
+                        {% endif %}
+                      {% endfor %}
+                          {# 물건이 팔린 경우, 리뷰 작성 페이지로 이동할 수 있는 링크 메시지 추가 #}
                         <div class="message-box from-you">
-                            <div class="message-text">{{ message.content }}</div>
-                            <p class="s-text">{{ message.sent_at }}</p>
+                          <div class="message-text">
+                            <p>물건 거래가 완료되었습니다. 리뷰 작성을 원하신다면 <a href="{% url 'review' %}"> "여기를 클릭하세요" </a></p>
+                          </div>
                         </div>
-                    {% endif %}
-                {% endfor %}
-                <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
+                {% endif %}
+                    <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
+                  {% comment %} {% endif %} {% endcomment %}
               </div>
-                {% comment %} {% endif %} {% endcomment %}
-            </div>
 
             <form class="chat-input">
               <textarea name="" id="message-textarea" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>

@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://blog.kakaocdn.net/dn/S0wSJ/btqDogzoUNX/kZBkpKPGjdGKJSvKKs35D0/img.png">
+    <title>리뷰작성하기</title>
     
     <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css'%}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css'%}"/>
@@ -25,7 +26,7 @@
             {% csrf_token %}
             <label for="content" class='review-label'>리뷰</label>
             <textarea name="content" id="id_content" cols="30" rows="10" required></textarea>
-            <fieldset class="rate">
+            <fieldset class="score">
                 <input type="radio" id="score10" name="score" value="100"><label for="score10" title="100"></label>
                 <input type="radio" id="score9" name="score" value="90"><label class="half" for="score9" title="90"></label>
                 <input type="radio" id="score8" name="score" value="80"><label for="score8" title="80"></label>

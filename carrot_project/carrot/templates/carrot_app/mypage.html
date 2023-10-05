@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css'%}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css'%}"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="https://blog.kakaocdn.net/dn/S0wSJ/btqDogzoUNX/kZBkpKPGjdGKJSvKKs35D0/img.png">
+    <title>마이페이지</title>
+</head>
+
+<body>
+    {% include "carrot_app/nav.html" %}
+
+    <div class="my">
+        <h3 id ="myid">{{ user }}</h3>
+        <div class = 'containers'>
+            <p id="my1">내 매너 : </p>
+            <p id="my2">내 리뷰 :</p>
+            <p id="my3">내 거래 :</p>
+        </div>
+        
+    </div>
+
+    {% include "carrot_app/footer.html" %}
+</body>
+</html>

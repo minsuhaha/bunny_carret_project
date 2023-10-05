@@ -1,0 +1,248 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
+    <title>채팅하기</title>
+  </head>
+
+  <body class="back-ye">
+    {% include 'carrot_app/nav.html' %}
+    <div class="content-box">
+      <div class="container column">
+        <div class="post-box flex-box">
+
+          <!-- 채팅선택창 -->
+          <div class="chat-select-container">
+            <div class="flex-box">
+
+              <!-- 아이디및 체크박스 -->
+              <div class="id-box flex-box between">
+                아이디
+                <div>
+                  <label>
+                    안읽은 메세지만 보기
+                    <input type="checkbox" name="" id="">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 채팅 리스트 -->
+            <div class="chat-list-box flex-box column">
+              <!-- 봇 -->
+              <div class="chat-box flex-box">
+                <div class="ai-profile">
+                  <img src="{% static 'img/icon_aibot.png'%}" alt="">
+                </div>
+                <div>
+                  <p class="bold">AI 챗봇</p>
+                  <p class="chat-thumb-text">궁금한 내용을 물어보세요!</p>
+                </div>
+              </div>
+              <!-- 채팅방리스트 -->
+              {% if chatrooms %}
+              {% for chatroom in chatrooms %}
+              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'chatroom_ws' chatroom.chatroom.id%}";'>
+                <div>
+                  <div class="flex-box">
+                    <p class="bold">{{ chatroom.chat_partner.username }}</p>
+                    <p class="s-text">{{ chatroom.chat_partner.region }}</p>
+                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
+                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
+                    
+                  </div>
+                  <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
+                </div>
+                <div class="thumbnail-box">
+                  <img src="{{ chatroom.product.images.url }}" alt="{{ chatroom.product.title }}">
+                </div>
+              </div>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          <!-- 채팅창-->          
+            <div class="chat-main-container">
+            <div>
+                <div class="contact-info flex-box">
+                    AI 챗봇
+                    <div class="temp">
+                        1
+                    </div>
+                </div>
+
+              <!--물품정보-->
+              <div class="goods-box flex-box between">
+                <div class="flex-box">
+                  <div class="selected-thumbnail-box">
+                    <img src="{% static 'img/icon_aibot.png'%}" alt="{% static 'img/icon_aibot.png'%}">
+                  </div>
+                  <div class="goods-info-box">
+                    <p>당근마켓</p>
+                    <p class="bold">AI 챗봇</p>
+                  </div>
+                </div>                
+              </div>
+
+              <!--채팅창 메인-->
+              
+              <div class="chat-container">
+                {% for message in chatbot_message %}
+                    {% if message.is_bot == False %}
+                        <div class="message-box from-me">
+                            <p class="s-text">{{ message.sent_at }}</p>
+                            <div class="message-text">{{ message.content }}</div>
+                        </div>
+                    {% else %}
+                        <div class="message-box from-you">
+                            <div class="message-text">{{ message.content }}</div>
+                            <p class="s-text">{{ message.sent_at }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
+              </div>
+                
+            </div>
+            
+            <div class="chat-input">              
+              <textarea name="" id="message-textarea" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>             
+              <div>                
+                <button id="sendButton">
+                  전송
+                </button>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'carrot_app/footer.html' %}
+    
+    <!-- script -->
+    {{ selected_chatroom.id|json_script:"selected-chatroom-id" }}
+    {{ chat_partner.id|json_script:"chat-partner-id" }}   
+    <script>
+      var csrfToken = "{{ csrf_token }}";
+    
+      // 스크롤을 가장 아래로 이동하는 함수
+    function scrollToBottom() {
+        var chatContainer = document.querySelector(".chat-container");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+
+      document.getElementById('sendButton').addEventListener('click', function () {
+        // 로딩 애니메이션 
+        // document.getElementById('loading-animation').style.display = 'block';
+        // document.getElementById('ai-img').style.display = 'none';
+        let currentDate = new Date();
+    
+        // 한국 시간대 (KST, Asia/Seoul)로 설정합니다.
+        const monthNames = [
+            '1월', '2월', '3월', '4월', '5월', '6월',
+            '7월', '8월', '9월', '10월', '11월', '12월'
+          ];
+        const addLeadingZero = (number) => {
+            if (number < 10) {
+                return `0${number}`;
+            }
+            return number;
+            };
+        
+        // 날짜와 시간을 원하는 형식으로 포맷합니다.
+        let koreaTime = `${currentDate.getFullYear()}년 ${monthNames[currentDate.getMonth()]} ${currentDate.getDate()}일 ${currentDate.getHours()}:${addLeadingZero(currentDate.getMinutes())}`;
+        
+    
+        let title = document.getElementById('message-textarea').value;
+    
+        let msg_you = document.querySelector(".chat-container");
+        let send_msg = `
+        <div class="message-box from-me">
+            <p class="s-text">${koreaTime}</p>
+            <div class="message-text">${title}</div>
+        </div>
+        `
+        
+        // let loading_msg = ``
+        msg_you.innerHTML += send_msg
+        // msg_you.innerHTML += loading_msg
+    
+        
+        // id가 "message-textarea"인 textarea 요소를 가져옵니다.
+        let textarea = document.getElementById("message-textarea");
+    
+        // textarea의 내용을 삭제합니다.
+        textarea.value = "";
+    
+        console.log(title)
+        fetch('/chatbot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+            },
+            body: new URLSearchParams({
+                'title': title
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // document.getElementById('loading-animation').style.display = 'none';
+                // document.getElementById('ai-img').style.display = 'block';
+                let loadingImg = document.querySelector('.chat-container #loading_img');
+                if (loadingImg) {
+                    loadingImg.remove();
+                }
+    
+                //기존 내용에 자동완성 된 내용 더함        
+                
+                data.message = data.message.replace(/\n/g, '<br>');
+                rep_msg = `
+                            <div class="message-box from-you">
+                                <div class="message-text">${data.message}</div>
+                                <p class="s-text">${koreaTime}</p>
+                            </div>
+                `
+                msg_you.innerHTML += rep_msg
+                scrollToBottom(); // 메시지를 받은 후 스크롤을 가장 아래로 이동
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('loading-animation').style.display = 'none';
+            });
+        
+        scrollToBottom(); // 메시지를 받은 후 스크롤을 가장 아래로 이동
+    });
+    
+    const messageTextarea = document.getElementById('message-textarea');
+    
+    // Enter 키로 채팅 전송
+    messageTextarea.addEventListener('keypress', (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault(); // Enter 키의 기본 동작(새 줄 입력) 막기
+            document.getElementById('sendButton').click(); // 전송 버튼을 클릭하도록 시뮬레이트
+        }
+    });
+
+    // 초기 페이지 로딩 시 스크롤을 가장 아래로 이동
+        window.addEventListener('load', function () {
+            scrollToBottom();
+        });
+    </script>
+       
+    
+  </body>
+
+</html>

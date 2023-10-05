@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.contrib import messages
-from .models import ChatRoom, Message, Product, UserProfile, UserProfile, Category
+from .models import ChatRoom, ChatbotMessage, ChatbotRoom, Message, Product, UserProfile, UserProfile, Category
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -12,6 +12,8 @@ from django.db.models import Q
 from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
+import openai
+from carrot_project.settings import secrets
 
 # 메인 화면
 def main(request):
@@ -205,6 +207,9 @@ def set_region(request):
         
         area = { "region" : region }
 
+        
+        area = { "region" : region }
+
         if region:
             try:
                 user_profile = UserProfile.objects.get(user=request.user)
@@ -351,6 +356,63 @@ def open_or_create_chatroom(request):
 
             return JsonResponse({'success': True, 'chatroom_url': chatroom_url})
 
+# 챗봇 메세지 기록 받아오는 뷰
+def get_chatbot_messages(user):
+
+    chatbot_room, created = ChatbotRoom.objects.get_or_create(user=user)  # ChatbotRoom 생성 또는 가져오기
+    # 주고받은 채팅(메시지) 기록
+    messages = ChatbotMessage.objects.filter(chatroom=chatbot_room).order_by('sent_at')
+
+    return messages
+
+# 챗봇 메세지와 채팅방 리스트 정보 가져오기
+def chatbot(request):
+    user = request.user
+
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
+    chatbot_message = get_chatbot_messages(user)
+    
+    # 템플릿에 전달할 데이터 정의
+    context = {
+        'chatrooms' : chatrooms_context,
+        'chatbot_message' : chatbot_message,
+    }
+
+    return render(request, "carrot_app/chatbot.html", context)
+
+openai.api_key = secrets["openai"]
+
+def chatbot_api(request):
+    if request.method == "POST":
+    
+        # 사용자가 보낸 메시지를 가져옴
+        user_message = request.POST.get('title')
+        user = request.user  # 현재 로그인한 사용자
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": user_message},
+                ],
+            )
+            # 반환된 응답에서 텍스트 추출해 변수에 저장
+            bot_message = response['choices'][0]['message']['content']
+
+            chatroom, created = ChatbotRoom.objects.get_or_create(user=user)  # 챗봇과의 대화를 위한 채팅방
+            
+            # 사용자 메세지 저장
+            ChatbotMessage.objects.create(chatroom=chatroom, sender=user, content=user_message)
+            # 챗봇 메세지 저장
+            ChatbotMessage.objects.create(chatroom=chatroom, sender=user, content=bot_message, is_bot = True)
+        
+        except Exception as e:
+            message = str(e)
+
+        return JsonResponse({"message": bot_message})
+    return render(request, 'chatbot.html')
+
 @method_decorator(login_required, name='dispatch')
 class ConfirmDealView(View):
     def post(self, request, post_id):
@@ -374,7 +436,7 @@ class ConfirmDealView(View):
             return redirect('trade')
         
         # buyer를 설정하고, product_sold를 Y로 설정
-        # product.buyer = chat_room.buyer if chat_room.seller == product.seller else chat_room.seller
+        product.buyer = chat_room.buyer if chat_room.seller == product.seller else chat_room.seller
         product.product_sold = 'Y'
         product.save()
         
@@ -393,3 +455,9 @@ def review (request):
         form = ReviewForm()
 
     return render(request, 'carrot_app/review.html', {'form': form})
+
+
+#마이페이지
+
+def mypage(request):
+    return render(request, 'carrot_app/mypage.html')
