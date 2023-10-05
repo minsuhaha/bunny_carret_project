@@ -36,4 +36,5 @@ urlpatterns = [
 
     #mypage
     path('mypage/<int:user_id>', views.mypage, name='mypage'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
 ]

@@ -18,10 +18,10 @@
     </div>
     <section id="content">
         <section id="user-profile">
-            <h2 id="username">
-                {{user.username}}
+            <h2 id="nickname">
+                {{user_profile.nickname}}
                 <span id="region_name">
-                    {{user.profile.region}}    
+                    {{user_profile.region}}    
                 </span>
             </h2>
             <ul id="profile-detail">
@@ -29,8 +29,15 @@
                 <li class="profile-detail-title">재거래희망률 <span class="profile-detail-count">표시될 만큼 충분히 거래하지 않았어요.</span></li>
             </ul>
             <div id="profile-image">
-                <img alt="동동히" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-c649f052a34ebc4eee35048815d8e4f73061bf74552558bb70e07133f25524f9.png" />
+                {% if user_profile.profile_img %}
+                    <img src="{{ user_profile.profile_img.url }}" alt="{{ user_profile.nickname }}" class="block-box">
+                {% else %}
+                    <img alt="동동히" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-c649f052a34ebc4eee35048815d8e4f73061bf74552558bb70e07133f25524f9.png" />
+                {% endif %}
             </div>
+                <a href="{% url 'edit_profile' %}" >
+                    <button id="edit-profile-button">프로필 수정하기</button>
+                </a>
         </section>
         <div id="user-records-detail">
             <section id="user-filter">

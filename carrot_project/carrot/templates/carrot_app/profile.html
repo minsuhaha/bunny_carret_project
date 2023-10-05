@@ -1,0 +1,58 @@
+{% load custom_filter%}
+{% load static%}{% load humanize %}
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="shortcut icon" type="image/x-icon" href="https://blog.kakaocdn.net/dn/S0wSJ/btqDogzoUNX/kZBkpKPGjdGKJSvKKs35D0/img.png">
+    <title>거래 글쓰기</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/write.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <style>
+      select {
+        width: 200px;
+        padding: .8em 1em;
+        border: 1px solid #999;
+        border: none;
+        font-size: 16px;
+        -webkit-appearance: none;
+        -moz-appearance: none;    
+        appearance: none;
+        background: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99761B495C84AA8716') no-repeat 95% 50%;
+        background-color: #f3f3f3;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="content-box">
+      <div class="container">
+          <div class="about-trade">
+            <div class="container">
+              <form class="write-box" method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex-box">
+                  <label class="img-upload">
+                    <img src="{% if user.profile.profile_img %}{{ user.profile.profile_img.url }}{% else %}{% static 'img/icon_photo.png' %}{% endif %}" alt="이미지 설명" id="imagePreview">
+                    <input type="file" name="profile_img" accept="image/*" style="display: none;" onchange="previewImage(event);">
+                  </label>
+                  <div>
+                    <div class="flex-box column baseline title-box">
+                      <label for="nickname">닉네임</label>
+                      <input type="text" name="nickname" placeholder="닉네임" value="{% if user.profile.nickname %}{{ user.profile.nickname }}{% endif %}">
+                  </div>
+                <div class="submit-button-box">
+                    <button type="submit" style = "margin-left:20px;";>수정완료</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        <script type="text/javascript" src="{% static 'js/write.js' %}"></script>
+
+      </body>
+
+    </html>
