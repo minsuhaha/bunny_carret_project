@@ -84,10 +84,10 @@ class Review(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='review_product' ) # 상품
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer' ) # 판매자 
     reviewee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewee' ) # 구매자
-    reviewtype = models.IntegerField() # 리뷰의 주체, 0 = 판매자, 1 = 구매자
+    # reviewtype = models.IntegerField() # 리뷰의 주체, 0 = 판매자, 1 = 구매자
     content = models.TextField() # 리뷰 내용
     created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
-    score = models.IntegerField()
+    score = models.IntegerField(default="50")
 
     def __str__(self):
         return f'{self.seller.username}'
