@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm
+from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm, UserProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.urls import reverse
@@ -471,12 +471,26 @@ def review (request):
 
 # 마이페이지
 def mypage(request, user_id):
-    user = request.user
-    sold_products = Product.objects.filter(seller=user, product_sold='Y').order_by('-created_at')
-    proceed_products = Product.objects.filter(seller=user, product_sold='N').order_by('-created_at')
-    reviews = Review.objects.filter(reviewer=user).order_by('-created_at')
+    user_profile = UserProfile.objects.get(user=request.user)
+    sold_products = Product.objects.filter(seller=request.user, product_sold='Y').order_by('-created_at')
+    proceed_products = Product.objects.filter(seller=request.user, product_sold='N').order_by('-created_at')
+    reviews = Review.objects.filter(reviewer=request.user).order_by('-created_at')
     
-    context = {'user' : user, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
+    context = {'user_profile' : user_profile, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
     return render(request, 'carrot_app/mypage2.html', context)
 
 
+def edit_profile(request):
+    # 현재 로그인한 사용자의 프로필 가져오기
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            # 프로필 수정 완료 후 이동할 페이지나 메시지를 설정할 수 있습니다.
+            return redirect('mypage', user_profile.id)  # 수정 후 프로필 페이지로 이동
+    else:
+        form = UserProfileUpdateForm(instance=user_profile)
+
+    return render(request, 'carrot_app/profile.html')
