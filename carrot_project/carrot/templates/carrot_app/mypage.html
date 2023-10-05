@@ -36,7 +36,6 @@
             <div class="flex-box full-box card-container between">
               {% for post in posts %}
                 <div class="card-box">
-                  <!--로그인 된 유저라면-->   
                   <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
                       <div class="card-img">
                           {% if post.images %}
