@@ -174,3 +174,24 @@ h1{
 
 
   
+/* 더보기 */
+
+.link-container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.more-link{
+  text-decoration: none;
+  color:#fff;
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: #ff6f0e;
+  padding:.8rem 5rem;
+  border-radius: 2rem;
+}
+
+.more-link:hover{
+  color: #ddd;
+}

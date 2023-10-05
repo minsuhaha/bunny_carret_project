@@ -31,72 +31,84 @@
         <img src="{% static 'img/img1.png' %}" alt=""/>
       </div>
     </div>
-  </div>
+  {% comment %} </div> {% endcomment %}
 
-  <div class="post-box">
-    <div class="container column center">
-      <h1>중고거래 인기매물</h1>
-    </div>
-    <div class="container column center">
-      <div class="full-box trade-box column">
-        <div class="flex-box full-box card-container between">
-          {% for post in posts %}
+    <div class="post-box">
+      <div class="container column center" id='popular'>
+        <h1>중고거래 인기매물</h1>
+      </div>
+      <div class="container column center">
+        <div class="full-box trade-box column">
+          <div class="flex-box full-box card-container between infinite-container">
+            {% for post in page_obj %}
+            
+              <div class="card-box infinite-item">
+                <!--로그인 된 유저라면-->
+                {% if user.is_authenticated %} 
+                <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
+                    <div class="card-img">
+                        {% if post.images %}
+                            <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="card-info-box">
+                        <h5>{{ post.title }}</h5>
+                        <p class="bold">{{ post.price | intcomma }}원</p>
+                        <p>{{ post.region }}</p>
+                        <div class="flex-box">
+                            <p>조회 {{ post.view_cnt }}</p>
+                            <p>·</p>
+                            <p>채팅 {{ post.chat_cnt }}</p>
+                        </div>
+                    </div>
+                </a>
+                <!--로그인 되지 않은 유저라면-->
+            {% else %}
+              <a href="javascript:void(0);" class="trade-text-link" onclick="showLoginAlert()">
+                    <div class="card-img">
+                        {% if post.images %}
+                            <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="card-info-box">
+                        <h5>{{ post.title }}</h5>
+                        <p class="bold">{{ post.price | intcomma }}원</p>
+                        <p>{{ post.region }}</p>
+                        <div class="flex-box">
+                            <p>조회 {{ post.view_cnt }}</p>
+                            <p>·</p>
+                            <p>채팅 {{ post.chat_cnt }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
+              </div>
+              {% if forloop.counter == 4 %}
+                <div id="sec8"></div>
+              {% endif %}
+            {% endfor %}
 
-            <div class="card-box">
-              <!--로그인 된 유저라면-->
-              {% if user.is_authenticated %} 
-              <a href="{% url 'trade_post' post.id %}" class="trade-text-link">
-                  <div class="card-img">
-                      {% if post.images %}
-                          <img src="{{ post.images.url }}" alt="{{ post.title }}">
-                      {% endif %}
-                  </div>
-                  <div class="card-info-box">
-                      <h5>{{ post.title }}</h5>
-                      <p class="bold">{{ post.price | intcomma }}원</p>
-                      <p>{{ post.region }}</p>
-                      <div class="flex-box">
-                          <p>조회 {{ post.view_cnt }}</p>
-                          <p>·</p>
-                          <p>채팅 {{ post.chat_cnt }}</p>
-                      </div>
-                  </div>
-              </a>
-               <!--로그인 되지 않은 유저라면-->
-          {% else %}
-            <a href="javascript:void(0);" class="trade-text-link" onclick="showLoginAlert()">
-                  <div class="card-img">
-                      {% if post.images %}
-                          <img src="{{ post.images.url }}" alt="{{ post.title }}">
-                      {% endif %}
-                  </div>
-                  <div class="card-info-box">
-                      <h5>{{ post.title }}</h5>
-                      <p class="bold">{{ post.price | intcomma }}원</p>
-                      <p>{{ post.region }}</p>
-                      <div class="flex-box">
-                          <p>조회 {{ post.view_cnt }}</p>
-                          <p>·</p>
-                          <p>채팅 {{ post.chat_cnt }}</p>
-                      </div>
-                  </div>
-              </a>
-          {% endif %}
-            </div>
-          {% endfor %}
+            
 
+          </div>
         </div>
       </div>
+      {% if page_obj.has_next %}
+      <div class="link-container">
+        <a class='more-link' href="?page=all#sec8" >더보기</a>
+      </div>
+      {% endif %}
     </div>
-  </div>
   {% include 'carrot_app/footer.html' %}
-
-</body>
+  </body>
 
 <script type="text/javascript">
   function showLoginAlert() {
       alert("로그인을 먼저 해주세요.");
       window.location.href = '{% url "login" %}';
   }
+
+  
 </script>
+<script src="{% static "js/infinite.min.js" %}"></script>
 </html>

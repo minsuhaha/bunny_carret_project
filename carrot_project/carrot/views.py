@@ -15,6 +15,8 @@ from django.utils.decorators import method_decorator
 import openai
 from carrot_project.settings import secrets
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # 메인 화면
 def main(request):
   top_views_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:4]
@@ -81,7 +83,17 @@ def register(request):
 # 중고거래 화면
 def trade(request):
     top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt') # 아직 팔리지 않은 물품중에 조회수 나열
-    return render(request, 'carrot_app/trade.html', {'posts': top_products})
+
+    # 페이지네이터
+    page = Paginator(top_products, 8)
+    page_number = request.GET.get('page')
+    page_obj = page.get_page(page_number)
+
+    if page_number=='all':
+        page = Paginator(top_products, 40)
+        return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': top_products})
+    
+    return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': page_obj})
 
 # 중고거래 상세정보 화면
 def trade_post(request, pk):
