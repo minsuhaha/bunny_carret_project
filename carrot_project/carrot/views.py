@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
 import openai
+from carrot_project.settings import secrets
 
 # 메인 화면
 def main(request):
@@ -380,7 +381,7 @@ def chatbot(request):
 
     return render(request, "carrot_app/chatbot.html", context)
 
-openai.api_key = "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"
+openai.api_key = secrets["openai"]
 
 def chatbot_api(request):
     if request.method == "POST":
