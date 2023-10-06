@@ -93,6 +93,7 @@
                     <p class="bold">{{ product.price }}</p>
                   </div>
                 </div>
+
                 {% if user.id == product.seller.id %}
                   {% if product.product_sold == 'N' %}
                     <form method="post" action="{% url 'confirm_deal' product.id %}">
@@ -147,11 +148,14 @@
                         {% endif %}
                       {% endfor %}
                           {# 물건이 팔린 경우, 리뷰 작성 페이지로 이동할 수 있는 링크 메시지 추가 #}
-                        <div class="message-box from-you">
-                          <div class="message-text">
-                            <p>물건 거래가 완료되었습니다. 리뷰 작성을 원하신다면 <a href="{% url 'review' %}"> "여기를 클릭하세요" </a></p>
-                          </div>
-                        </div>
+                          {# 현재 유저가 구매자일 경우에만 리뷰작성 글 볼수있도록 설정 #}
+                          {% if user.id == product.buyer.id %}
+                            <div class="message-box from-you">
+                              <div class="message-text">
+                                <p>물건 거래가 완료되었습니다. 리뷰 작성을 원하신다면 <a href="{% url 'review' chat_partner.id product.id %}"> "여기를 클릭하세요" </a></p>
+                              </div>
+                            </div>
+                            {% endif %}
                 {% endif %}
                     <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
                   {% comment %} {% endif %} {% endcomment %}

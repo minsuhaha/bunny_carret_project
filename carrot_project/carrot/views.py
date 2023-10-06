@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm
+from .forms import CustomLoginForm, CustomRegistrationForm, PostForm, ReviewForm, UserProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.urls import reverse
@@ -90,6 +90,7 @@ def trade(request):
     page_obj = page.get_page(page_number)
 
     if page_number=='all':
+        top_products = Product.objects.filter(product_sold='N').order_by('-view_cnt')[:40]
         page = Paginator(top_products, 40)
         return render(request, 'carrot_app/trade.html', {'posts': top_products, 'page_obj': top_products})
     
@@ -457,26 +458,48 @@ class ConfirmDealView(View):
     
 
 
-def review (request):
+def review(request, id, p_id):
+    
+    product = Product.objects.get(id=p_id)
+    seller = User.objects.get(id=id)
+    buyer = User.objects.get(id= request.user.id)
+
     if request.method == 'POST':
+
         form = ReviewForm(data=request.POST or None)
         if form.is_valid():
             form.save()  # 저장
             return redirect('main')  # 저장 후 메인 페이지로 이동
+        else:
+            return redirect('alert', alert_message='저장 왜 안됨')
     else:
         form = ReviewForm()
 
-    return render(request, 'carrot_app/review.html', {'form': form})
+    return render(request, 'carrot_app/review.html', {'form': form, 'product': product, 'seller': seller, 'buyer': buyer})
 
 
 # 마이페이지
 def mypage(request, user_id):
-    user = request.user
-    sold_products = Product.objects.filter(seller=user, product_sold='Y').order_by('-created_at')
-    proceed_products = Product.objects.filter(seller=user, product_sold='N').order_by('-created_at')
-    reviews = Review.objects.filter(reviewer=user).order_by('-created_at')
+    user_profile = UserProfile.objects.get(user=request.user)
+    sold_products = Product.objects.filter(seller=request.user, product_sold='Y').order_by('-created_at')
+    proceed_products = Product.objects.filter(seller=request.user, product_sold='N').order_by('-created_at')
+    reviews = Review.objects.filter(reviewee=request.user).order_by('-created_at')
     
-    context = {'user' : user, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
+    context = {'user_profile' : user_profile, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
     return render(request, 'carrot_app/mypage2.html', context)
 
 
+def edit_profile(request):
+    # 현재 로그인한 사용자의 프로필 가져오기
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            # 프로필 수정 완료 후 이동할 페이지나 메시지를 설정할 수 있습니다.
+            return redirect('mypage', user_profile.id)  # 수정 후 프로필 페이지로 이동
+    else:
+        form = UserProfileUpdateForm(instance=user_profile)
+
+    return render(request, 'carrot_app/profile.html')

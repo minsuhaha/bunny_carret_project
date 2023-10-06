@@ -19,7 +19,7 @@ urlpatterns = [
     path('alert/<str:alert_message>/', views.alert, name='alert'),
 
     #review
-    path('review/', views.review, name='review'),
+    path('review/<int:id>/<int:p_id>', views.review, name='review'),
 
     # location
     path('location/', views.location, name='location'),
@@ -36,4 +36,5 @@ urlpatterns = [
 
     #mypage
     path('mypage/<int:user_id>', views.mypage, name='mypage'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
 ]
