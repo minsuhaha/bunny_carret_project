@@ -35,25 +35,11 @@
 <div id="3"></div>
 
 ## 🛠 기술 스택
-### Frontend  
-<div align="center">  
-<a href="https://en.wikipedia.org/wiki/HTML5" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" alt="HTML5" height="100" /></a>  
-<a href="https://www.w3schools.com/css/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/css3-original-wordmark.svg" alt="CSS3" height="100" /></a>  
-<a href="https://www.javascript.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/javascript-original.svg" alt="JavaScript" height="100" /></a>  
-</div>
 
-</td><td valign="top" width="33%">
+| <img src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" alt="HTML5" width="50px" height="50px" /> | <img src="https://profilinator.rishav.dev/skills-assets/css3-original-wordmark.svg" alt="CSS3" width="50px" height="50px" />  | <img src="https://profilinator.rishav.dev/skills-assets/javascript-original.svg" alt="JavaScript" width="50px" height="50px" /> | <img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/django-original.svg" alt="Django" height="50" /> | <img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/postgresql-original-wordmark.svg" alt="PostgreSQL" height="50" /> | <img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/figma-icon.svg" alt="Figma" height="50" /> |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| HTML5  | CSS3 | Javascript | django | postgresql | Figma |
 
-
-
-### Backend  
-<div align="center">  
-<a href="https://www.python.org/" target="_blank"><img style="margin: 100px" src="https://profilinator.rishav.dev/skills-assets/python-original.svg" alt="Python" height="100" /></a>  
-<a href="https://www.djangoproject.com/" target="_blank"><img style="margin: 100px" src="https://profilinator.rishav.dev/skills-assets/django-original.svg" alt="Django" height="100" /></a>  
-<a href="https://www.postgresql.org/" target="_blank"><img style="margin: 100px" src="https://profilinator.rishav.dev/skills-assets/postgresql-original-wordmark.svg" alt="PostgreSQL" height="100" /></a>   
-</div>
-
-</td><td valign="top" width="33%">
 
 <br />
 
