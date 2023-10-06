@@ -38,7 +38,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chatroom_id = text_data_json['chatroom_id']
         sender_id = self.scope['user'].id # 현재 요청을 보낸 사용자 id
         receiver_id = text_data_json['receiver_id']
-        sent_at = datetime.now().strftime("%b. %d, %Y, %I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.')
+        sent_at = datetime.now().isoformat()
         
         # chatroom_id로 ChatRoom 인스턴스를 가져옵니다.
         chatroom = await self.get_chatroom(chatroom_id)

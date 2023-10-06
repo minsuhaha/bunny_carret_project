@@ -120,13 +120,13 @@
                   {% for message in messages %}
                       {% if message.sender == user %}
                           <div class="message-box from-me">
-                              <p class="s-text">{{ message.sent_at }}</p>
+                              <p class="s-text">{{ message.sent_at|date:"A g:i" }}</p>
                               <div class="message-text">{{ message.content }}</div>
                           </div>
                       {% else %}
                           <div class="message-box from-you">
                               <div class="message-text">{{ message.content }}</div>
-                              <p class="s-text">{{ message.sent_at }}</p>
+                              <p class="s-text">{{ message.sent_at|date:"A g:i" }}</p>
                           </div>
                       {% endif %}
                   {% endfor %}
@@ -205,14 +205,37 @@
         }
         const sentAtElement = document.createElement('p');
         sentAtElement.classList.add('s-text');
-        sentAtElement.textContent = data.sent_at;
+        
+
+        // ISO 형식의 문자열로 Date 객체 생성
+        const sentAt = new Date(data.sent_at);
+
+        // 시간을 'PM 00:00'와 같은 형식으로 포맷팅
+        const hours = sentAt.getHours();
+        const minutes = sentAt.getMinutes();
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+        const SentAt = `${amPm} ${hours === 0 ? '12' : hours > 12 ? hours - 12 : hours}:${minutes.toString().padStart(2, '0')}`;
+
+        sentAtElement.textContent = SentAt;
+
+
         const messageTextElement = document.createElement('div');
         messageTextElement.classList.add('message-text');
         messageTextElement.textContent = data.message;
         
-        messageElement.appendChild(sentAtElement);
-        messageElement.appendChild(messageTextElement);
+
+        if (data.sender_id === {{ request.user.id }}) {
+          // 나의 메시지인 경우, 시간을 왼쪽에 표시
+          messageElement.appendChild(sentAtElement);
+          messageElement.appendChild(messageTextElement);
+        } else {
+          // 상대방 메시지인 경우, 시간을 오른쪽에 표시
+          messageElement.appendChild(messageTextElement);
+          messageElement.appendChild(sentAtElement);
+        }
+    
         chatContainer.appendChild(messageElement);
+        
         
         // 채팅 입력 후 스크롤을 가장 밑으로 내려주기 -> 최신 메세지를 화면에 나타나도록 
         chatContainer.scrollTop = chatContainer.scrollHeight;
