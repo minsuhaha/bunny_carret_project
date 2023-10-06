@@ -25,8 +25,7 @@
                 </span>
             </h2>
             <ul id="profile-detail">
-                <li class="profile-detail-title">매너온도 <span class="profile-detail-count">{{user_profile.manner}}</span></li>
-                <li class="profile-detail-title">재거래희망률 <span class="profile-detail-count">표시될 만큼 충분히 거래하지 않았어요.</span></li>
+                <li class="profile-detail-title">매너온도 <span class="profile-detail-count">{{user_profile.manner}} °C</span></li>
             </ul>
             <div id="profile-image">
                 {% if user_profile.profile_img %}
@@ -42,44 +41,13 @@
         <div id="user-records-detail">
             <section id="user-filter">
                 <ul>
-                    <li><a class="active" href="#proceed-products-tab">판매중 물품</a></li>
-                    <li><a class="" href="#products-tab">판매완료 물품</a></li>
-                    <li><a class="" href="#reviews-tab">거래후기</a></li>
+                    <li><a class="active" href="#proceed-products-tab">판매중 ({{sold_products.count}})</a></li>
+                    <li><a href="#products-tab">판매완료 ({{proceed_products.count}})</a></li>
+                    <li><a href="#reviews-tab">거래후기 ({{reviews.count}})</a></li>
                 </ul>
             </section>
-            <!-- 판매 물품, , 판매중인 물품, 거래 후기 내용을 표시하는 코드 -->
-            <div id="products-tab">
-                <div class="container column center">
-                  <div class="full-box trade-box column">
-                    <div class="flex-box full-box card-container between">
-                      {% for product in sold_products %}
-                        <div class="card-box">
-                          <a href="{% url 'trade_post' product.id %}" class="trade-text-link">
-                              <div class="card-img">
-                                  {% if product.images %}
-                                      <img src="{{ product.images.url }}" alt="{{ product.title }}">
-                                  {% endif %}
-                              </div>
-                              <div class="card-info-box">
-                                  <h5>{{ product.title }}</h5>
-                                  <p class="bold">{{ product.price | intcomma }}원</p>
-                                  <p>{{ product.region }}</p>
-                                  <div class="flex-box">
-                                      <p>조회 {{ product.view_cnt }}</p>
-                                      <p>·</p>
-                                      <p>채팅 {{ product.chat_cnt }}</p>
-                                  </div>
-                              </div>
-                          </a>
-                        </div>
-                      {% endfor %}
-            
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-              <div id="proceed-products-tab">
+            <!-- 판매 물품 -->
+            <div id="proceed-products-tab">
                 <div class="container column center">
                   <div class="full-box trade-box column">
                     <div class="flex-box full-box card-container between">
@@ -109,8 +77,74 @@
                   </div>
                 </div>
               </div>
+             <!-- 판매완료 물품 -->
+              <div id="products-tab" style="display: none;">
+                <div class="container column center">
+                  <div class="full-box trade-box column">
+                    <div class="flex-box full-box card-container between">
+                      {% for product in sold_products %}
+                        <div class="card-box">
+                          <a href="{% url 'trade_post' product.id %}" class="trade-text-link">
+                              <div class="card-img">
+                                  {% if product.images %}
+                                      <img src="{{ product.images.url }}" alt="{{ product.title }}">
+                                  {% endif %}
+                              </div>
+                              <div class="card-info-box">
+                                  <h5>{{ product.title }}</h5>
+                                  <p class="bold">{{ product.price | intcomma }}원</p>
+                                  <p>{{ product.region }}</p>
+                                  <div class="flex-box">
+                                      <p>조회 {{ product.view_cnt }}</p>
+                                      <p>·</p>
+                                      <p>채팅 {{ product.chat_cnt }}</p>
+                                  </div>
+                              </div>
+                          </a>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+               <!-- 거래후기  -->
               <div id="reviews-tab" style="display: none;">
+                <section id="user-records" class="user-reviews" data-total-page="1" data-current-page="1">
+                    <ul id="reviews-list">
+                        {% for review in reviews %}
+                        <li class="review">
+                            <div class="review-profile-photo">
+                                {% if review.reviewer.profile.profile_img %}
+                                    <img src="{{ review.reviewer.profile.profile_img.url }}" alt="{{ review.reviewer.profile.nickname }}" class="block-box">
+                                {% else %}
+                                    <img alt="동동히" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-c649f052a34ebc4eee35048815d8e4f73061bf74552558bb70e07133f25524f9.png" />
+                                {% endif %}
+                            </div>
+
+                            <div class="review-details">
+                                <div class="review-writer-info">
+                                    <div class="review-writer-nickname">
+                                        <a href="{% url "mypage" review.reviewer.id %}">{{review.reviewer.profile.nickname}}</a>
+                                    </div>
+                                    <div class="review-writer-region-name">
+                                        {{review.reviewer.profile.region}}
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <p>
+                                        {{review.content}}
+                                    </p>
+                                </div>
+                                <div class="review-time">
+                                    {{review.created_at}}
+                                </div>
+                            </div>
+                        </li>
+                        <!-- 다른 리뷰들도 동일한 구조로 추가할 수 있습니다. -->
+                    {% endfor %}
+                    </ul>
+                </section>
                 <!-- 거래 후기 내용을 표시하는 코드 (생략) -->
              </div>
         </div>

@@ -5,18 +5,19 @@ from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # 유저 관련 모델
-class Manner(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_seller') # 판매자 
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_buyer') # 구매자
-    score = models.IntegerField(("매너온도"), validators=[MinValueValidator(0), MaxValueValidator(100)], default=50) # 판매자 매너 점수
-    created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
+# class Manner(models.Model):
+#     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_seller') # 판매자 
+#     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manner_buyer') # 구매자
+#     score = models.IntegerField(("매너온도"), validators=[MinValueValidator(0), MaxValueValidator(100)], default=50) # 판매자 매너 점수
+#     created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
 
-    def __str__(self):
-        return f'{self.seller.username}'
+#     def __str__(self):
+#         return f'{self.seller.username}'
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile') # 유저이름
-    manner = models.ForeignKey(Manner, on_delete = models.SET_NULL, null=True, related_name='profile_manner') # 유저매너
+    # manner = models.ForeignKey(Manner, on_delete = models.SET_NULL, null=True, related_name='profile_manner') # 유저매너
+    manner = models.FloatField("매너온도", validators=[MinValueValidator(0), MaxValueValidator(100)], default=50) # 판매자 매너 점수
     nickname = models.CharField(max_length=30, blank=True, null=True) # 유저 닉네임
     profile_img = models.ImageField(upload_to='post_images/', blank=True, null=True) # 유저 프로필 사진
     region = models.CharField(max_length=100, null=True) # 유저의 지역
@@ -82,15 +83,28 @@ class Message(models.Model):
     
 class Review(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='review_product' ) # 상품
-    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer' ) # 판매자 
-    reviewee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewee' ) # 구매자
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer' ) # 구매자 
+    reviewee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewee' ) # 판매자
     # reviewtype = models.IntegerField() # 리뷰의 주체, 0 = 판매자, 1 = 구매자
     content = models.TextField() # 리뷰 내용
     created_at = models.DateTimeField(auto_now_add=True) # 매너 점수 등록일
-    score = models.IntegerField(default="50")
+    score = models.IntegerField(default=50)
+
+    def save(self, *args, **kwargs):
+        super(Review, self).save(*args, **kwargs)
+        # 리뷰 저장 후 매너 점수 업데이트
+        self.update_manner()
+
+    def update_manner(self):
+        seller_profile = UserProfile.objects.get(user=self.reviewee)
+        reviews = Review.objects.filter(reviewee=self.reviewee)
+        total_score = sum(review.score for review in reviews)
+        average_score = total_score / len(reviews) if len(reviews) > 0 else 50
+        seller_profile.manner = average_score
+        seller_profile.save()
 
     def __str__(self):
-        return f'{self.seller.username}'
+        return f'{self.reviewee.username}'
 
 class ChatbotRoom(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='chatrooms', blank=True)

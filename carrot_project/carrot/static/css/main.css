@@ -137,3 +137,7 @@
 .card-info-box h5{
     width: 100%;
 }
+
+a{
+    text-decoration: none;
+}

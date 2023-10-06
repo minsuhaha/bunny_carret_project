@@ -483,7 +483,7 @@ def mypage(request, user_id):
     user_profile = UserProfile.objects.get(user=request.user)
     sold_products = Product.objects.filter(seller=request.user, product_sold='Y').order_by('-created_at')
     proceed_products = Product.objects.filter(seller=request.user, product_sold='N').order_by('-created_at')
-    reviews = Review.objects.filter(reviewer=request.user).order_by('-created_at')
+    reviews = Review.objects.filter(reviewee=request.user).order_by('-created_at')
     
     context = {'user_profile' : user_profile, 'sold_products' : sold_products, 'proceed_products' : proceed_products, 'reviews' : reviews}
     return render(request, 'carrot_app/mypage2.html', context)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Manner, Review, UserProfile
+from .models import Product, Review, UserProfile
 
 # 유저 회원 가입 폼
 class CustomRegistrationForm(forms.Form):

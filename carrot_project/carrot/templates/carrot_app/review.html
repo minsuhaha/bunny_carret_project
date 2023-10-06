@@ -26,10 +26,10 @@
             {% csrf_token %}
             <div style='display:none'>
               <label for="reviewer">리뷰하는사람</label>
-              <input type="text" name='reviewer' value='{{seller.id}}'>
+              <input type="text" name='reviewer' value='{{buyer.id}}'>
               
               <label for="reviewee">리뷰받는사람</label>
-              <input type="text" name='reviewee' value='{{buyer.id}}'>
+              <input type="text" name='reviewee' value='{{seller.id}}'>
 
               <label for="product_id">물품 id</label>
               <input type="text" name='product_id' value='{{product.id}}'>
