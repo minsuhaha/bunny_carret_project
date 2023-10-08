@@ -149,50 +149,7 @@
 <div id="7"></div>
 
 ## 👨‍👨‍👦‍👦 협업 방식
-
-<table align="center">
-  <tr>
-    <td align="center">
-      <a>
-        <b>Notion</b>
-      </a>
-    </td>
-    <td align="center">
-      <a>
-        <b>Jira</b>
-      </a>
-    </td>
-    <td align="center">
-      <a>
-        <b>Discord</b>
-      </a>
-    </td>
-    <td align="center">
-      <a>
-        <b>Github</b>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a>
-        - 
-      </a>
-    </td>
-    <td align="center">
-      <a>
-       - 
-      </a>
-    </td>
-    <td align="center">
-      <a>
-       - 
-      </a>
-    </td>
-    <td align="center">
-      <a>
-       -
-      </a>
-    </td>
-  </tr>
-</table>
+- Notion
+- Jira
+- Discord
+- Github
