@@ -57,32 +57,32 @@
 
 ### Register & Login
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6f3c32e6-9c36-4fd9-ab52-8a259ee86284">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/d949379b-ec39-48a4-a1ab-b7ff4c9b7de6">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6f3c32e6-9c36-4fd9-ab52-8a259ee86284">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/d949379b-ec39-48a4-a1ab-b7ff4c9b7de6">
   </div>
 
 ### Main
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/377688b9-9087-4369-ae17-71489b34fa3b">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/948f2126-999f-49ed-bcf5-ac807c759d0d">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/377688b9-9087-4369-ae17-71489b34fa3b">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/948f2126-999f-49ed-bcf5-ac807c759d0d">
   </div>
 
 ### Trade
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/19977331-d885-4758-8eb8-fe7ad88885a3">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/f2b29702-b6dc-438e-af18-90b08f190383">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/19977331-d885-4758-8eb8-fe7ad88885a3">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/f2b29702-b6dc-438e-af18-90b08f190383">
   </div>
 
 ### Trade-Detail
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6a9e1e67-3512-44d4-8a20-32873d794513">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/390bd839-99e8-4cee-93e4-40e17dfd3f09">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6a9e1e67-3512-44d4-8a20-32873d794513">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/390bd839-99e8-4cee-93e4-40e17dfd3f09">
   </div>
 
 ### Trade-Post
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/9446c344-9a26-4efa-b523-c72eba3eb940">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/0ae4613e-1db1-4d58-bca3-dfc4e9124def">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/9446c344-9a26-4efa-b523-c72eba3eb940">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/0ae4613e-1db1-4d58-bca3-dfc4e9124def">
   </div>
 
 ### Search
@@ -93,8 +93,8 @@
 
 ### Chat
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/d162913d-4e76-43a2-b1df-7dd53c2ba3a2">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/18cc429f-30b3-4529-88d7-45f0c1f23403">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/d162913d-4e76-43a2-b1df-7dd53c2ba3a2">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/18cc429f-30b3-4529-88d7-45f0c1f23403">
   </div>
 
 ### Review
@@ -104,14 +104,14 @@
 
 ### MyPage
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/a057a154-3e88-4e23-9b50-f44995c7a5cf">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/819fceb2-d2ba-442b-be1c-26f94a9a9b32">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/a057a154-3e88-4e23-9b50-f44995c7a5cf">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/819fceb2-d2ba-442b-be1c-26f94a9a9b32">
   </div>
 
 ### Location
   <div align="center">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/1b4e8c67-f0db-461e-83e6-1d732697f277">
-    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/ea069553-84f6-4d9c-96ae-971f7ce2a56c">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/1b4e8c67-f0db-461e-83e6-1d732697f277">
+    <img width="412" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/ea069553-84f6-4d9c-96ae-971f7ce2a56c">
 
   </div>
 
