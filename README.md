@@ -46,7 +46,8 @@
 <div id="4"></div>
 
 ## 🛢️ ERD
-- ERD
+<img width="600" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/689c5ec2-af2a-4df8-aa3c-07cca3b0e4b2">
+
 <br>
 
 
@@ -54,24 +55,34 @@
 
 ## 🎥 프로젝트 소개(UI)
 
-### Login
+### Register & Login
   <div align="center">
-    
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6f3c32e6-9c36-4fd9-ab52-8a259ee86284">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/d949379b-ec39-48a4-a1ab-b7ff4c9b7de6">
   </div>
 
 ### Main
   <div align="center">
-    
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/377688b9-9087-4369-ae17-71489b34fa3b">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/948f2126-999f-49ed-bcf5-ac807c759d0d">
+  </div>
+
+### Trade
+  <div align="center">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/19977331-d885-4758-8eb8-fe7ad88885a3">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/f2b29702-b6dc-438e-af18-90b08f190383">
+  </div>
+
+### Trade-Detail
+  <div align="center">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/6a9e1e67-3512-44d4-8a20-32873d794513">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/390bd839-99e8-4cee-93e4-40e17dfd3f09">
   </div>
 
 ### Trade-Post
   <div align="center">
-    
-  </div>
-
-### Chat
-  <div align="center">
-    
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/9446c344-9a26-4efa-b523-c72eba3eb940">
+    <img width="450" alt="image" src="https://github.com/minsuhaha/django-blog-project/assets/105342203/0ae4613e-1db1-4d58-bca3-dfc4e9124def">
   </div>
 
 ### Search
